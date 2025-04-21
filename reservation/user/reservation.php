@@ -1,3 +1,4 @@
+<?php include '../../../header.php'; ?>
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -28,7 +29,7 @@
         </nav>        
     </header>
     <h1>הזמנת מקום בפנסיון</h1>
-    <form action="reservation.php" method="POST">
+    <form action="reservationServerUpdate.php" method="POST">
     <div class="reservation-form">
         <div id="dateSelection">
             <h1>בחירת תאריכים</h1>
@@ -52,6 +53,7 @@
         <div id="message"></div>
     </div>
     
+
     <footer style="background-color: #f8f9fa; padding: 20px; text-align: center;">
         <div class="footer-content">
             <h2>פנסיון לכלבים שלנו</h2>

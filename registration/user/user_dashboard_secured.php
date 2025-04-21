@@ -1,4 +1,4 @@
-<?php include '../includes/header.php'; ?>
+<?php include '../../header.php'; ?>
 <!DOCTYPE html>
 <html lang="he">
 <head>
