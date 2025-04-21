@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['username'])) {
-    header("Location: registration/login.html");
+    header("Location: ../../registration/login.html");
     exit;
 }
 
@@ -18,10 +18,11 @@ $links = $user_type == 1
         '../admin/delete_order.php' => 'מחיקת הזמנה',
     ]
     : [
-        '../user/user_dashboard_secured.php' => 'דשבורד',
-        '../user/my_orders.php' => 'הזמנות',
-        '../user/reservation.html' => 'הזמנה חדשה',
-        '../user/update_profile_secured.php' => 'עדכון פרטים',
+        '../../registration/user/user_dashboard_secured.php' => 'דשבורד',
+        '../../registration/user/my_orders.php' => 'הזמנות',
+        '../../registration/user/reservation.html' => 'הזמנה חדשה',
+        '../../registration/user/update_profile_secured.php' => 'עדכון פרטים',
+        '../../grooming/admin/index.php' => 'הזמנת טיפוח',
     ];
 ?>
 
