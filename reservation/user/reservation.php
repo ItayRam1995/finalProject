@@ -1,4 +1,4 @@
-<?php include '../../../header.php'; ?>
+<?php include '../../header.php'; ?>
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -11,7 +11,7 @@
     <title>מסך הזמנה</title>
 </head>
 <body>
-    <header>
+    <!-- <header>
         <nav id="navbar">
             <div class="container">
                 <a href="#home" class="logo">
@@ -27,7 +27,7 @@
                 </ul>
             </div>
         </nav>        
-    </header>
+    </header> -->
     <h1>הזמנת מקום בפנסיון</h1>
     <form action="reservationServerUpdate.php" method="POST">
     <div class="reservation-form">
