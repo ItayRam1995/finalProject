@@ -27,6 +27,33 @@ $links = $user_type == 1
 ?>
 
 <style>
+/*  */
+
+  /* דוחף את כל האלמנטים שמתחת להדר */
+  html body > *:not(.header-container) {
+    margin-top: 100px;
+  }
+
+
+.header-container {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background: <?= $user_type == 1 ? '#c0392b' : '#2c3e50' ?>;
+    color: white;
+    padding: 15px 20px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    
+  }
+/*  */
+
+
   .header-name {
     position: absolute;
     top: 10px;
@@ -54,6 +81,8 @@ $links = $user_type == 1
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
+    padding-right: 130px;
+    padding-top: 20px;
   }
 
   .header-links {
@@ -93,7 +122,10 @@ $links = $user_type == 1
   }
 </style>
 
-<div class="header-name" style="background:white; color:black; border-radius:5px; font-weight:bold; position:absolute; top:10px; right:20px;">
+<!--  -->
+<div class="header-container">
+<!--  -->
+<div class="header-name" style="background:white; color:black; border-radius:5px; font-weight:bold; position:absolute; top:10px; right:150px;">
   שלום, <?= $first_name ?>
 </div>
 
@@ -103,7 +135,12 @@ $links = $user_type == 1
       <a href="<?= $href ?>"><?= $label ?></a>
     <?php endforeach; ?>
   </div>
+
+  <!--  -->
+  </div>
+  <!--  -->
   <div>
     <a href="../logout.php" style="color:white; text-decoration:none;"> התנתק🚪</a>
   </div>
 </div>
+
