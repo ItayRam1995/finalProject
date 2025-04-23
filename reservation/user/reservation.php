@@ -11,23 +11,23 @@
     <title>מסך הזמנה</title>
 </head>
 <body>
-    <!-- <header>
-        <nav id="navbar">
-            <div class="container">
-                <a href="#home" class="logo">
-                    <img src="mylogo.png" alt="לוגו הפנסיון" class="logo-img"> פנסיון לכלבים שלנו
-                </a>
-                <ul class="nav-links">
-                    <li><a href="#home">דף הבית</a></li>
-                    <li><a href="#about-us">עלינו</a></li>
-                    <li><a href="#services">שירותים</a></li>
-                    <li><a href="#booking">הזמנות</a></li>
-                    <li><a href="#contact">צור קשר</a></li>
-                    <li><a href="#faq">שאלות נפוצות</a></li>
-                </ul>
-            </div>
-        </nav>        
-    </header> -->
+    <!--<header>-->
+    <!--    <nav id="navbar">-->
+    <!--        <div class="container">-->
+    <!--            <a href="#home" class="logo">-->
+    <!--                <img src="mylogo.png" alt="לוגו הפנסיון" class="logo-img"> פנסיון לכלבים שלנו-->
+    <!--            </a>-->
+    <!--            <ul class="nav-links">-->
+    <!--                <li><a href="#home">דף הבית</a></li>-->
+    <!--                <li><a href="#about-us">עלינו</a></li>-->
+    <!--                <li><a href="#services">שירותים</a></li>-->
+    <!--                <li><a href="#booking">הזמנות</a></li>-->
+    <!--                <li><a href="#contact">צור קשר</a></li>-->
+    <!--                <li><a href="#faq">שאלות נפוצות</a></li>-->
+    <!--            </ul>-->
+    <!--        </div>-->
+    <!--    </nav>        -->
+    <!--</header>-->
     <h1>הזמנת מקום בפנסיון</h1>
     <form action="reservationServerUpdate.php" method="POST">
     <div class="reservation-form">
