@@ -20,7 +20,7 @@ $links = $user_type == 1
     : [
         '../../registration/user/user_dashboard_secured.php' => 'דשבורד',
         '../../registration/user/my_orders.php' => 'הזמנות',
-        '../../registration/user/reservation.html' => 'הזמנה חדשה',
+        '../../reservation/user/reservation.php' => 'הזמנה חדשה',
         '../../registration/user/update_profile_secured.php' => 'עדכון פרטים',
         '../../grooming/admin/index.php' => 'הזמנת טיפוח',
     ];
