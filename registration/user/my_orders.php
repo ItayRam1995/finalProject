@@ -1,4 +1,5 @@
 <?php
+session_start();
 include '../../header.php';
 
 // נתוני חיבור לבסיס הנתונים
@@ -28,6 +29,9 @@ else if (isset($_COOKIE['user_code'])) {
     $user_code = $_COOKIE['user_code'];
 }
 // אם אין גישה למשתמש, נציג הודעה מתאימה בהמשך
+else if (isset($_SESSION['username'])) {
+    $user_code = $_SESSION['username'];
+}
 
 // סגנון CSS משופר
 echo '<style>
@@ -270,11 +274,6 @@ if (empty($user_code)) {
             echo '<div class="order-detail-row">';
             echo '<span class="detail-label">מספר ימים:</span>';
             echo '<span class="detail-value">' . $row['total_days'] . '</span>';
-            echo '</div>';
-            
-            echo '<div class="order-detail-row">';
-            echo '<span class="detail-label">מספר מקומות:</span>';
-            echo '<span class="detail-value">' . $row['num_of_spots'] . '</span>';
             echo '</div>';
             
             echo '<div class="order-detail-row">';

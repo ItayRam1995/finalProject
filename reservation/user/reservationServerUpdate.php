@@ -32,7 +32,6 @@ $user_code = '';
 if (isset($_SESSION['user_code'])) {
     $user_code = $_SESSION['user_code'];
 } 
-
 // אם אין קוד משתמש, השתמש בקוד ברירת מחדל או בשם משתמש אם קיים
 else if (isset($_SESSION['username'])) {
     $user_code = $_SESSION['username'];
@@ -53,7 +52,7 @@ if ($conn->connect_error) {
 try {
     $conn->begin_transaction();
 
-    // הוספת שדה user_code לשאילתת הכנסת ההזמנה
+    // הוספת שדה user_code לשאילתת הכנסת ההזמנה - ללא num_of_spots
     $stmt = $conn->prepare("INSERT INTO reservation (start_date, end_date, user_code, created_at) VALUES (?, ?, ?, NOW())");
     $stmt->bind_param("sss", $start_date_str, $end_date_str, $user_code);
     if (!$stmt->execute()) {
@@ -62,7 +61,7 @@ try {
     $reservation_id = $conn->insert_id;
     $stmt->close();
 
-    // עדכון מספר מקומות
+    // עדכון זמינות - כל יום בנפרד
     $current = clone $start_date;
     while ($current <= $end_date) {
         $date_str = $current->format('Y-m-d');
@@ -84,7 +83,7 @@ try {
             $stmt->execute();
             $stmt->close();
         } else {
-            $default_spots = 3;
+            $default_spots = 49; // הורדת מקום אחד מהמספר המקורי של 50
             $stmt = $conn->prepare("INSERT INTO Availability (date, available_spots) VALUES (?, ?)");
             $stmt->bind_param("si", $date_str, $default_spots);
             $stmt->execute();
