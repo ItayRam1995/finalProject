@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+// ניסוייייייייייייי
 if (!isset($_SESSION['username'])) {
     header("Location: ../../registration/login.html");
     exit;
