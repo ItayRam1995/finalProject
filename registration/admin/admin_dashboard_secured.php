@@ -1,4 +1,4 @@
-
+<?php include '../../header.php'; ?>
 <!DOCTYPE html>
 <html lang="he">
 <head>
@@ -43,7 +43,7 @@ a:active, button:active {
 
 </style>
 </head>
-<?php include 'header.php'; ?>
+
 <body>
 
 <div style='background:#2c3e50;padding:15px;'>

@@ -1,4 +1,4 @@
-<?php include 'header.php'; ?>
+<?php include '../../header.php'; ?>
 <?php
 $servername = "localhost";
 $username = "itayrm_ItayRam";
