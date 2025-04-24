@@ -1,17 +1,5 @@
-<?php include '../includes/header.php'; ?>
+<?php include '../../header.php'; ?>
 <?php
-// ini_set('display_errors', 1);
-// ini_set('display_startup_errors', 1);
-// error_reporting(E_ALL);
-// session_start();
-
-// $message = '';
-// $error = false;
-
-// if (!isset($_SESSION['username'])) {
-//     header("Location: ../login.html");
-//     exit;
-// }
 
 $servername = "localhost";
 $username = "itayrm_ItayRam";
@@ -114,14 +102,6 @@ a:active, button:active {
 </style>
 </head>
 <body>
-
-<!--<div class="menu">-->
-<!--  <a href='user_dashboard_secured.php'>דשבורד</a>-->
-<!--  <a href='my_orders.php'>הזמנות</a>-->
-<!--  <a href='reservation.html'>הזמנה חדשה</a>-->
-<!--  <a href='update_profile_secured.php'>עדכון פרטים</a>-->
-<!--  <a href='../logout.php' style='float:left;'>🚪 התנתק</a>-->
-<!--</div>-->
 
 <form action="update_profile_secured.php" method="post">
   <h2>עדכון פרטים</h2>
