@@ -27,7 +27,7 @@ $links = $user_type == 1
         '../../registration/user/my_orders.php' => 'הזמנות',
         '../../reservation/user/reservation.php' => 'הזמנה חדשה',
         '../../registration/user/update_profile_secured.php' => 'עדכון פרטים',
-        '../../grooming/user/doGroomingAppointment.php' => 'הזמנת טיפוח',
+        '../../grooming/user/treatments.php' => 'הזמנת טיפוח',
     ];
 
 // קביעת צבעים לפי סוג משתמש
@@ -35,7 +35,7 @@ $headerBgColor = $user_type == 1 ? '#1a365d' : '#2c3e50'; // כחול כהה ל�
 $headerAccentColor = $user_type == 1 ? '#e53e3e' : '#3182ce'; // אדום למנהל, כחול בהיר למשתמש
 
 // חישוב גובה הכותרת (הערכה)
-$headerHeight = 120; // גובה ממוצע בפיקסלים
+$headerHeight = 140; // גובה ממוצע בפיקסלים     
 ?>
 
 <!-- 
@@ -79,9 +79,10 @@ $headerHeight = 120; // גובה ממוצע בפיקסלים
     .doggy-header-top {
         display: flex !important;
         justify-content: space-between !important;
-        align-items: center !important;
+        align-items: flex-start !important; 
         padding: 10px 20px !important;
         background-color: rgba(0, 0, 0, 0.1) !important;
+        position: relative !important; 
     }
     
     /* לוגו האתר */
@@ -92,6 +93,7 @@ $headerHeight = 120; // גובה ממוצע בפיקסלים
         text-decoration: none !important;
         display: flex !important;
         align-items: center !important;
+        margin-top: 5px !important; /* הוספת מרווח קטן מלמעלה ליישור טוב יותר */
     }
     
     .doggy-header-logo-icon {
@@ -99,8 +101,17 @@ $headerHeight = 120; // גובה ממוצע בפיקסלים
         font-size: 24px !important;
     }
     
-    /* מידע על המשתמש */
+    /* מידע על המשתמש*/
     .doggy-header-user-info {
+        display: flex !important;
+        flex-direction: column !important; 
+        align-items: flex-end !important; /* יישור לימין */
+        gap: 8px !important;
+        padding-top: 15px !important; /* מרווח מלמעלה כדי לפנות מקום לתגית סוג המשתמש */
+    }
+    
+    /* שורה עם השם הפרטי והתנתקות */
+    .doggy-header-user-controls {
         display: flex !important;
         align-items: center !important;
         gap: 15px !important;
@@ -168,10 +179,22 @@ $headerHeight = 120; // גובה ממוצע בפיקסלים
         background-color: <?= $headerAccentColor ?> !important;
     }
     
+    /* אינדיקציה לסוג משתמש */
+    .doggy-header-user-type {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        background-color: <?= $headerAccentColor ?> !important;
+        color: white !important;
+        font-size: 11px !important;
+        padding: 2px 8px !important;
+        border-bottom-right-radius: 5px !important;
+    }
+    
     /* התאמה למובייל */
     @media (max-width: 768px) {
         body {
-            padding-top: 170px !important; /* הגדלת הריווח למסכים קטנים */
+            padding-top: 190px !important; /* הגדלת הריווח למסכים קטנים */
         }
         
         .doggy-header-top {
@@ -182,6 +205,11 @@ $headerHeight = 120; // גובה ממוצע בפיקסלים
         }
         
         .doggy-header-user-info {
+            align-items: stretch !important;
+            padding-top: 20px !important; /* הגדלת המרווח במובייל */
+        }
+        
+        .doggy-header-user-controls {
             justify-content: space-between !important;
         }
         
@@ -197,18 +225,6 @@ $headerHeight = 120; // גובה ממוצע בפיקסלים
         }
     }
     
-    /* אינדיקציה לסוג משתמש */
-    .doggy-header-user-type {
-        position: absolute !important;
-        top: 0 !important;
-        left: 0 !important;
-        background-color: <?= $headerAccentColor ?> !important;
-        color: white !important;
-        font-size: 11px !important;
-        padding: 2px 8px !important;
-        border-bottom-right-radius: 5px !important;
-    }
-    
     /* סקריפט JavaScript להתאמת padding-top בזמן ריענון הדף */
     .js-header-height-script {
         display: none !important;
@@ -216,13 +232,13 @@ $headerHeight = 120; // גובה ממוצע בפיקסלים
 </style>
 
 <div class="doggy-header-container">
-    <!-- אינדיקציה לסוג משתמש -->
-    <div class="doggy-header-user-type">
-        <?= $user_type == 1 ? 'מנהל' : 'משתמש' ?>
-    </div>
-    
     <!-- סרגל עליון -->
     <div class="doggy-header-top">
+        <!-- אינדיקציה לסוג משתמש  -->
+        <div class="doggy-header-user-type">
+            <?= $user_type == 1 ? 'מנהל' : 'משתמש' ?>
+        </div>
+        
         <!-- לוגו -->
         <a href="<?= $user_type == 1 ? '../admin/admin_dashboard_secured.php' : '../../registration/user/user_dashboard_secured.php' ?>" class="doggy-header-logo">
             <span class="doggy-header-logo-icon">🐕</span>
@@ -231,14 +247,17 @@ $headerHeight = 120; // גובה ממוצע בפיקסלים
         
         <!-- מידע משתמש וכפתור התנתקות -->
         <div class="doggy-header-user-info">
-            <div class="doggy-header-welcome">
-                <span class="doggy-header-welcome-icon">👋</span>
-                <span>שלום, <?= $first_name ?></span>
+            <!-- שורת עם שם פרטי והתנתקות -->
+            <div class="doggy-header-user-controls">
+                <div class="doggy-header-welcome">
+                    <span class="doggy-header-welcome-icon">👋</span>
+                    <span>שלום, <?= $first_name ?></span>
+                </div>
+                <a href="../../registration/logout.php" class="doggy-header-logout">
+                    <span>התנתקות</span>
+                    <span class="doggy-header-logout-icon">🚪</span>
+                </a>
             </div>
-            <a href="../../registration/logout.php" class="doggy-header-logout">
-                <span>התנתקות</span>
-                <span class="doggy-header-logout-icon">🚪</span>
-            </a>
         </div>
     </div>
     
