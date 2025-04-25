@@ -165,6 +165,8 @@
     let currentWeek = 0;
     const maxWeeks = 4;
     const timeSlots = document.querySelectorAll('.time-slots div');
+    // קבלת user_code מה-SESSION
+    const userCode = "<?php echo htmlspecialchars($_SESSION['user_code'] ?? ''); ?>";
 
     function generateWeek(weekOffset) {
       const start = new Date();
@@ -246,10 +248,16 @@
         alert('אנא בחר יום ושעה.');
         return;
       }
+      
+      // הוספת user_code לבקשה
       fetch('groomingAppServer.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ day: selectedDay, time: selectedSlot })
+        body: JSON.stringify({ 
+          day: selectedDay, 
+          time: selectedSlot,
+          user_code: userCode  // הוספת user_code
+        })
       })
       .then(res => res.json())
       .then(data => {
