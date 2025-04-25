@@ -192,6 +192,34 @@
         font-size: 1.2em;
       }
     }
+    
+    /* מסך טעינה */
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.7);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .loading-spinner {
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #189ab4;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -199,6 +227,12 @@
 <h1>שירותי טיפוח לכלבים</h1>
 <p>בחרו את הטיפול המושלם עבור החבר הכי טוב שלכם 🐶</p>
 </header>
+
+<!-- מסך טעינה -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+</div>
+
 <div class="treatments-container">
 <div class="treatment-card" onclick="toggleCard(this)">
 <img alt="רחצה וסירוק" src="images/bath.png"/>
@@ -212,7 +246,7 @@
 <div class="treatment-description">
         רחצה יסודית עם שמפו טבעי, סירוק מקצועי להסרת קשרים, וניחוח נפלא שיישאר לאורך זמן.
         <br/><br/>
-<button class="order-button" onclick="event.stopPropagation(); alert('רחצה וסירוק נוסף להזמנה!')">הזמן עכשיו</button>
+<button class="order-button" onclick="event.stopPropagation(); orderGroomingService('רחצה וסירוק', 80)">הזמן עכשיו</button>
 </div>
 </div>
 <div class="treatment-card" onclick="toggleCard(this)">
@@ -227,7 +261,7 @@
 <div class="treatment-description">
         תספורת לפי סטנדרט גזע או בקשה אישית, עם ציוד מתקדם והתאמה אישית לגודל וסוג הפרווה.
         <br/><br/>
-<button class="order-button" onclick="event.stopPropagation(); alert('תספורת מקצועית נוספה להזמנה!')">הזמן עכשיו</button>
+<button class="order-button" onclick="event.stopPropagation(); orderGroomingService('תספורת מקצועית', 120)">הזמן עכשיו</button>
 </div>
 </div>
 <div class="treatment-card" onclick="toggleCard(this)">
@@ -242,7 +276,7 @@
 <div class="treatment-description">
         גזיזת ציפורניים עדינה ובטוחה עם ציוד מקצועי, לשמירה על נוחות ובריאות כפות הרגליים.
         <br/><br/>
-<button class="order-button" onclick="event.stopPropagation(); alert('גזיזת ציפורניים נוספה להזמנה!')">הזמן עכשיו</button>
+<button class="order-button" onclick="event.stopPropagation(); orderGroomingService('גזיזת ציפורניים', 40)">הזמן עכשיו</button>
 </div>
 </div>
 <div style="width: 100%; text-align: center; font-size: 1.3em; font-weight: bold; color: #05445e; margin: 40px 0 10px;">טיפולים נוספים מומלצים</div><div class="treatment-card" onclick="toggleCard(this)">
@@ -257,7 +291,7 @@
 <div class="treatment-description">
     ניקוי יסודי ועדין של תעלות האוזניים למניעת דלקות וריחות לא נעימים.
     <br/><br/>
-<button class="order-button" onclick="event.stopPropagation(); alert('ניקוי אוזניים נוסף להזמנה!')">הזמן עכשיו</button>
+<button class="order-button" onclick="event.stopPropagation(); orderGroomingService('ניקוי אוזניים', 30)">הזמן עכשיו</button>
 </div>
 </div><div class="treatment-card" onclick="toggleCard(this)">
 <img alt="צחצוח שיניים" src="images/teeath.png"/>
@@ -271,7 +305,7 @@
 <div class="treatment-description">
     טיפול שיניים הכולל הסרת רובד, חיזוק חניכיים וריח פה רענן.
     <br/><br/>
-<button class="order-button" onclick="event.stopPropagation(); alert('צחצוח שיניים נוסף להזמנה!')">הזמן עכשיו</button>
+<button class="order-button" onclick="event.stopPropagation(); orderGroomingService('צחצוח שיניים', 35)">הזמן עכשיו</button>
 </div>
 </div><div class="treatment-card" onclick="toggleCard(this)">
 <img alt="טיפול בקרציות" src="images/tick.png"/>
@@ -285,7 +319,7 @@
 <div class="treatment-description">
     טיפול מונע או משמיד נגד טפילים חיצוניים באמצעות תכשירים בטוחים לכלבים.
     <br/><br/>
-<button class="order-button" onclick="event.stopPropagation(); alert('טיפול בקרציות ופרעושים נוסף להזמנה!')">הזמן עכשיו</button>
+<button class="order-button" onclick="event.stopPropagation(); orderGroomingService('טיפול בקרציות', 60)">הזמן עכשיו</button>
 </div>
 </div></div>
 <footer>
@@ -300,6 +334,41 @@
         }
       });
       selectedCard.classList.toggle('active');
+    }
+    
+    // פונקציה להזמנת שירות טיפוח
+    function orderGroomingService(type, price) {
+      // הצגת מסך טעינה
+      document.getElementById('loadingOverlay').style.display = 'flex';
+      
+      // יצירת בקשת fetch לשמירת סוג הטיפוח והמחיר ב-SESSION
+      fetch('saveGroomingType.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          grooming_type: type,
+          grooming_price: price
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        // בדיקה אם השמירה הצליחה
+        if (data.success) {
+          // מעבר לדף הזמנת תור
+          window.location.href = '../user/doGroomingAppointment.php';
+        } else {
+          // הצגת הודעת שגיאה
+          alert('אירעה שגיאה: ' + data.error);
+          document.getElementById('loadingOverlay').style.display = 'none';
+        }
+      })
+      .catch(error => {
+        console.error('שגיאה:', error);
+        alert('אירעה שגיאה בתהליך ההזמנה. אנא נסה שנית מאוחר יותר.');
+        document.getElementById('loadingOverlay').style.display = 'none';
+      });
     }
   </script>
 </body>
