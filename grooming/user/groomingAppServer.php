@@ -41,7 +41,7 @@ $grooming_type = isset($_SESSION['grooming_type']) ? $_SESSION['grooming_type'] 
 $grooming_price = isset($_SESSION['grooming_price']) ? intval($_SESSION['grooming_price']) : 0;
 
 // קבלת קוד המשתמש מה-SESSION
-$user_code = isset($_SESSION['username']) ? $_SESSION['username'] : '';
+$user_code = isset($_SESSION['username']) ? $_SESSION['user_code'] : '';
 
 // כאן שמים את isTaken = 1 ומעדכנים את סוג הטיפוח והמחיר
 $stmt = $conn->prepare("INSERT INTO grooming_appointments (day, time, confirmation, isTaken, user_code, grooming_type, grooming_price) VALUES (?, ?, ?, 1, ?, ?, ?)");
