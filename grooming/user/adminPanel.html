@@ -60,7 +60,7 @@
 
   <script>
     function fetchAppointments() {
-      fetch('adminPanel.php')
+      fetch('adminPanelServer.php')
         .then(res => res.json())
         .then(data => {
           const tbody = document.getElementById('appointments-table');
@@ -93,7 +93,7 @@
     function cancelAppointment(confirmation, btn) {
       if (!confirm('האם אתה בטוח שברצונך לבטל את ההזמנה?')) return;
 
-      fetch('cancelAppointment.php', {
+      fetch('cancelAppointmentServer.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ confirmation })
