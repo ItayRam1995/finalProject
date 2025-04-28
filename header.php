@@ -28,6 +28,7 @@ $links = $user_type == 1
         '../../reservation/user/reservation.php' => 'הזמנה חדשה',
         '../../registration/user/update_profile_secured.php' => 'עדכון פרטים',
         '../../grooming/user/treatments.php' => 'הזמנת טיפוח',
+        '../../dog_registration/user/dog_registration.php' => 'רישום כלב חדש לאתר',
     ];
 
 // קביעת צבעים לפי סוג משתמש
