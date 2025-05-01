@@ -43,16 +43,22 @@ $grooming_price = isset($_SESSION['grooming_price']) ? intval($_SESSION['groomin
 // קבלת קוד המשתמש מה-SESSION
 $user_code = isset($_SESSION['username']) ? $_SESSION['user_code'] : '';
 
-// כאן שמים את isTaken = 1 ומעדכנים את סוג הטיפוח והמחיר
-$stmt = $conn->prepare("INSERT INTO grooming_appointments (day, time, confirmation, isTaken, user_code, grooming_type, grooming_price) VALUES (?, ?, ?, 1, ?, ?, ?)");
-$stmt->bind_param("sssssi", $data['day'], $data['time'], $confirmation, $user_code, $grooming_type, $grooming_price);
+// קבלת מזהה הכלב הפעיל מה-SESSION
+$dog_id = null;
+if (isset($_SESSION['active_dog_id'])) {
+    $dog_id = $_SESSION['active_dog_id'];
+}
+
+// כאן שמים את isTaken = 1 ומעדכנים את סוג הטיפוח, המחיר ומזהה הכלב
+$stmt = $conn->prepare("INSERT INTO grooming_appointments (day, time, confirmation, isTaken, user_code, grooming_type, grooming_price, dog_id) VALUES (?, ?, ?, 1, ?, ?, ?, ?)");
+$stmt->bind_param("sssssii", $data['day'], $data['time'], $confirmation, $user_code, $grooming_type, $grooming_price, $dog_id);
 
 if ($stmt->execute()) {
     // אם ההזמנה הצליחה, מוחקים את המידע מה-SESSION כדי שלא יישמר להזמנה הבאה
     unset($_SESSION['grooming_type']);
     unset($_SESSION['grooming_price']);
     
-    echo json_encode(['success' => true, 'confirmation' => $confirmation]);
+    echo json_encode(['success' => true, 'confirmation' => $confirmation, 'dog_id' => $dog_id]);
 } else {
     echo json_encode(['error' => 'שגיאה בהוספת ההזמנה: ' . $stmt->error]);
 }
