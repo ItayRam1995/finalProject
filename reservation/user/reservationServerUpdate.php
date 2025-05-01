@@ -33,6 +33,11 @@ if (isset($_SESSION['user_code'])) {
     $user_code = $_SESSION['user_code'];
 } 
 
+// קבלת מזהה הכלב הפעיל מה-SESSION
+$dog_id = null;
+if (isset($_SESSION['active_dog_id'])) {
+    $dog_id = $_SESSION['active_dog_id'];
+}
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 $conn->set_charset("utf8");
@@ -45,8 +50,8 @@ if ($conn->connect_error) {
 try {
     $conn->begin_transaction();
 
-    $stmt = $conn->prepare("INSERT INTO reservation (start_date, end_date, user_code, created_at) VALUES (?, ?, ?, NOW())");
-    $stmt->bind_param("sss", $start_date_str, $end_date_str, $user_code);
+    $stmt = $conn->prepare("INSERT INTO reservation (start_date, end_date, user_code, dog_id, created_at) VALUES (?, ?, ?, ?, NOW())");
+    $stmt->bind_param("sssi", $start_date_str, $end_date_str, $user_code, $dog_id);
     if (!$stmt->execute()) {
         throw new Exception("שגיאה בהכנסת הזמנה: " . $stmt->error);
     }
@@ -92,6 +97,7 @@ try {
         'success' => true, 
         'reservation_id' => $reservation_id,
         'user_code' => $user_code,
+        'dog_id' => $dog_id,
         'message' => 'ההזמנה נשמרה בהצלחה'
     ]);
 
