@@ -1,9 +1,76 @@
+<?php include '../../header_For_first_Dog_Reg.php'; ?>
+<?php
+session_start();
+
+// וידוא שהמשתמש מחובר
+if (!isset($_SESSION['username'])) {
+    header("Location: ../../registration/login.html");
+    exit;
+}
+
+// וידוא שהמשתמש הוא משתמש רגיל
+if ($_SESSION['user_type'] != 0) {
+    header("Location: ../../registration/admin/admin_dashboard_secured.php");
+    exit;
+}
+
+
+// בדיקה אם יש כבר כלבים למשתמש
+$servername = "localhost";
+$username = "itayrm_ItayRam";
+$password = "itay0547862155";
+$dbname = "itayrm_dogs_boarding_house";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// הגדרה לעברית
+$conn->set_charset("utf8mb4");
+
+$user_code = $_SESSION['user_code'];
+
+//  שימוש בשאילתה מוכנה וטיפול בשגיאות
+$check_dogs_query = "SELECT COUNT(*) as dog_count FROM dogs WHERE user_code = ?";
+
+// כאן מכינים את השאילתה באמצעות הפונקציה prepare של אובייקט החיבור למסד הנתונים ($conn)
+$stmt = $conn->prepare($check_dogs_query);
+
+// אם יש טעות תחבירית ב-SQL
+if ($stmt === false) {
+    die("Error preparing statement: " . $conn->error);
+}
+
+$stmt->bind_param("s", $user_code);
+
+// הרצת השאילתה עם הפרמטר שהוזן.
+$stmt->execute();
+
+//הפונקציה הזו שולפת את התוצאה של השאילתה שהרצנו.
+$result = $stmt->get_result();
+
+// בדיקה שהתוצאה תקינה
+if ($result === false) {
+    die("Error executing query: " . $stmt->error);
+}
+
+// קריאת התוצאה
+$row = $result->fetch_assoc();
+
+// אם יש כלבים, הפנה לעמוד בחירת כלב
+if ($row['dog_count'] > 0) {
+    header("Location: select_active_dog.php");
+    exit;
+}
+$conn->close();
+?>
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>הרשמת כלב חדש</title>
+    <title>הרשמת כלב ראשון</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <style>
@@ -54,6 +121,25 @@
         
         header p {
             color: #777;
+        }
+        
+        .first-time-banner {
+            background-color: rgba(79, 193, 227, 0.15);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--accent-color);
+        }
+        
+        .first-time-banner h2 {
+            color: var(--secondary-color);
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .first-time-banner p {
+            color: #555;
+            margin-bottom: 5px;
         }
         
         .form-container {
@@ -312,9 +398,15 @@
 <body>
     <div class="container">
         <header>
-            <h1>הרשמת כלב חדש למערכת</h1>
-            <p>אנא מלאו את הפרטים הבאים כדי להוסיף את הכלב שלכם למערכת.</p>
+            <h1>רישום הכלב הראשון שלך</h1>
+            <p>כדי להתחיל להשתמש באתר, אנא רשום את הכלב הראשון שלך</p>
         </header>
+        
+        <div class="first-time-banner">
+            <h2><i class="fas fa-paw"></i> ברוך הבא לפנסיון הכלבים!</h2>
+            <p>לפני שתוכל להשתמש בשירותים שלנו, עליך לרשום לפחות כלב אחד במערכת.</p>
+            <p>לאחר רישום הכלב הראשון, תוכל להשתמש בכל השירותים שלנו ואף להוסיף כלבים נוספים בעתיד.</p>
+        </div>
         
         <div id="status-message" class="status-message"></div>
         
@@ -462,7 +554,7 @@
                 </div>
             </div>
             
-            <button type="submit" class="btn btn-submit"><i class="fas fa-plus-circle"></i> הוסף את הכלב למערכת</button>
+            <button type="submit" class="btn btn-submit"><i class="fas fa-plus-circle"></i> רשום את הכלב הראשון שלי</button>
         </form>
     </div>
 
@@ -649,7 +741,7 @@
                     // גלילה לשדה הראשון עם שגיאה
                     if (firstErrorField) {
                         $('html, body').animate({
-                            scrollTop: firstErrorField.offset().top - 200
+                            scrollTop: firstErrorField.offset().top - 250
                         }, 3000);
                     }
                     
@@ -686,9 +778,12 @@
                             
                             const result = JSON.parse(response);
                             if (result.status === 'success') {
-                                showStatusMessage('הכלב נרשם בהצלחה!', 'success');
-                                $('#dog-registration-form')[0].reset();
-                                $('#image-preview').hide();
+                                showStatusMessage('הכלב נרשם בהצלחה! מעביר אותך לדשבורד...', 'success');
+                                
+                                // הפניה לדשבורד המשתמש לאחר 3 שניות
+                                setTimeout(function() {
+                                    window.location.href = '../../registration/user/user_dashboard_secured.php';
+                                }, 3000);
                             } else {
                                 // הודעת שגיאה ידידותית למשתמש
                                 let errorMsg = 'אירעה שגיאה בשמירת הנתונים: ';
@@ -764,7 +859,7 @@
                 
                 // גלילה אל ההודעה
                 $('html, body').animate({
-                    scrollTop: statusMessage.offset().top - 200
+                    scrollTop: statusMessage.offset().top - 250
                 }, 500);
                 
                 // הסתרת ההודעה אחרי 10 שניות רק אם זה לא הודעת שגיאה
