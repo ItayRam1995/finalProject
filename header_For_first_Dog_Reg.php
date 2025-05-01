@@ -10,91 +10,16 @@ if (!isset($_SESSION['username'])) {
 $first_name = htmlspecialchars($_SESSION['first_name'] ?? "אורח");
 $user_type = $_SESSION['user_type'] ?? 0;
 $username = $_SESSION['username'] ?? "";
-$user_code = $_SESSION['user_code'] ?? "";
 
-// בדיקה אם יש למשתמש כלבים רשומים (רק למשתמשים רגילים)
-if ($user_type == 0) {
-    // חיבור למסד הנתונים
-    $servername = "localhost";
-    $username_db = "itayrm_ItayRam";
-    $password_db = "itay0547862155";
-    $dbname = "itayrm_dogs_boarding_house";
-    
-    $conn = new mysqli($servername, $username_db, $password_db, $dbname);
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-    
-    // הגדרה לעברית
-    $conn->set_charset("utf8mb4");
-    
-    // בדיקה אם יש כלבים רשומים למשתמש
-    $check_dogs_query = "SELECT COUNT(*) as dog_count FROM dogs WHERE user_code = ?";
-    $stmt = $conn->prepare($check_dogs_query);
-    $stmt->bind_param("s", $user_code);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
-    
-    // אם אין כלבים רשומים, העבר לעמוד רישום כלב
-    if ($row['dog_count'] == 0) {
-        // בדיקה אם הדף הנוכחי אינו כבר עמוד הרישום כלבים
-        $current_page = basename($_SERVER['PHP_SELF']);
-        if ($current_page != "dog_registration_without_dogs.php" && $current_page != "dog_registration.php") {
-            header("Location: ../../dog_registration/user/dog_registration_without_dogs.php");
-            exit;
-        }
-    } else {
-        // בדיקה אם יש כלב פעיל בסשן
-        if (!isset($_SESSION['active_dog_id'])) {
-            // בדיקה אם הדף הנוכחי אינו כבר עמוד בחירת כלב
-            $current_page = basename($_SERVER['PHP_SELF']);
-            if ($current_page != "select_active_dog.php") {
-                header("Location: ../../dog_registration/user/select_active_dog.php");
-                exit;
-            }
-        } else {
-            // קבלת פרטי הכלב הפעיל
-            $active_dog_id = $_SESSION['active_dog_id'];
-            $get_dog_query = "SELECT dog_name FROM dogs WHERE dog_id = ? AND user_code = ?";
-            $stmt = $conn->prepare($get_dog_query);
-            $stmt->bind_param("is", $active_dog_id, $user_code);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            
-            if ($row = $result->fetch_assoc()) {
-                $active_dog_name = htmlspecialchars($row['dog_name']);
-            } else {
-                // אם הכלב לא נמצא, הסר אותו מהסשן ונתב מחדש
-                unset($_SESSION['active_dog_id']);
-                unset($_SESSION['active_dog_name']);
-                header("Location: ../../dog_registration/user/select_active_dog.php");
-                exit;
-            }
-        }
-    }
-    
-    $stmt->close();
-    $conn->close();
-}
+
 
 // הגדרת תפריטים לפי סוג משתמש
 $links = $user_type == 1
     ? [
-        '../../registration/admin/admin_dashboard_secured.php' => 'דשבורד מנהל',
-        '../../registration/admin/users_list.php' => 'משתמשים',
-        '../../registration/admin/all_orders.php' => 'הזמנות',
-        '../../registration/admin/update_availability.php' => 'עדכון זמינות',
-        '../../registration/admin/delete_order.php' => 'מחיקת הזמנה',
+
     ]
     : [
-        '../../registration/user/user_dashboard_secured.php' => 'דשבורד',
-        '../../registration/user/my_orders.php' => 'הזמנות',
-        '../../reservation/user/reservation.php' => 'הזמנה חדשה',
-        '../../registration/user/update_profile_secured.php' => 'עדכון פרטים',
-        '../../grooming/user/treatments.php' => 'הזמנת טיפוח',
-        '../../dog_registration/user/dog_registration.php' => 'רישום כלב חדש',
-        '../../dog_registration/user/select_active_dog.php' => 'החלפת כלב פעיל',
+
     ];
 
 // קביעת צבעים לפי סוג משתמש
@@ -198,22 +123,6 @@ $headerHeight = 140; // גובה ממוצע בפיקסלים
         margin-left: 5px !important;
     }
     
-    /* סגנון לאזור הכלב הפעיל */
-    .doggy-header-active-dog {
-        background: rgba(255, 255, 255, 0.15) !important;
-        color: white !important;
-        padding: 6px 12px !important;
-        border-radius: 5px !important;
-        font-weight: bold !important;
-        display: flex !important;
-        align-items: center !important;
-        margin-right: 10px !important;
-    }
-    
-    .doggy-header-dog-icon {
-        margin-left: 5px !important;
-    }
-    
     .doggy-header-logout {
         color: white !important;
         text-decoration: none !important;
@@ -294,7 +203,6 @@ $headerHeight = 140; // גובה ממוצע בפיקסלים
         
         .doggy-header-user-controls {
             justify-content: space-between !important;
-            flex-wrap: wrap !important;
         }
         
         .doggy-header-links {
@@ -306,11 +214,6 @@ $headerHeight = 140; // גובה ממוצע בפיקסלים
         .doggy-header-link {
             text-align: center !important;
             padding: 10px !important;
-        }
-        
-        .doggy-header-active-dog {
-            margin-top: 5px !important;
-            margin-right: 0 !important;
         }
     }
     
@@ -329,27 +232,19 @@ $headerHeight = 140; // גובה ממוצע בפיקסלים
         </div>
         
         <!-- לוגו -->
-        <a href="<?= $user_type == 1 ? '../../registration/admin/admin_dashboard_secured.php' : '../../registration/user/user_dashboard_secured.php' ?>" class="doggy-header-logo">
+        <a class="doggy-header-logo">
             <span class="doggy-header-logo-icon">🐕</span>
             <span>פנסיון כלבים</span>
         </a>
         
         <!-- מידע משתמש וכפתור התנתקות -->
         <div class="doggy-header-user-info">
-            <!-- שורת עם שם פרטי, כלב פעיל והתנתקות -->
+            <!-- שורת עם שם פרטי והתנתקות -->
             <div class="doggy-header-user-controls">
                 <div class="doggy-header-welcome">
                     <span class="doggy-header-welcome-icon">👋</span>
                     <span>שלום, <?= $first_name ?></span>
                 </div>
-                
-                <?php if ($user_type == 0 && isset($active_dog_name)): ?>
-                <div class="doggy-header-active-dog">
-                    <span class="doggy-header-dog-icon">🦮</span>
-                    <span>כלב פעיל: <?= $active_dog_name ?></span>
-                </div>
-                <?php endif; ?>
-                
                 <a href="../../registration/logout.php" class="doggy-header-logout">
                     <span>התנתקות</span>
                     <span class="doggy-header-logout-icon">🚪</span>
