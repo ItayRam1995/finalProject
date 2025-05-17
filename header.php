@@ -79,9 +79,11 @@ if ($user_type == 0) {
 }
 
 // הגדרת תפריטים לפי סוג משתמש
+// תנאי קצר (ternary operator)
 $links = $user_type == 1
     ? [
         '../../registration/admin/admin_dashboard_secured.php' => 'דשבורד מנהל',
+        '../../grooming/admin/groomingPanel.php' => 'הזמנות טיפוח',
         '../../registration/admin/users_list.php' => 'משתמשים',
         '../../registration/admin/all_orders.php' => 'הזמנות',
         '../../registration/admin/update_availability.php' => 'עדכון זמינות',
@@ -331,8 +333,9 @@ $headerHeight = 140; // גובה ממוצע בפיקסלים
         
         <!-- לוגו -->
         <a href="<?= $user_type == 1 ? '../../registration/admin/admin_dashboard_secured.php' : '../../registration/user/user_dashboard_secured.php' ?>" class="doggy-header-logo">
-            <span class="doggy-header-logo-icon">🐕</span>
             <span>פנסיון כלבים</span>
+            <span class="doggy-header-logo-icon">🐕</span>
+          
         </a>
         
         <!-- מידע משתמש וכפתור התנתקות -->

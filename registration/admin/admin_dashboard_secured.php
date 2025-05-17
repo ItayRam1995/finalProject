@@ -45,18 +45,6 @@ a:active, button:active {
 </head>
 
 <body>
-
-<div style='background:#2c3e50;padding:15px;'>
-  <a href='user_dashboard_secured.php' style='color:white;margin-left:20px;text-decoration:none;'>דשבורד</a>
-  <a href='my_orders.php' style='color:white;margin-left:20px;text-decoration:none;'>הזמנות</a>
-  <a href='reservation.html' style='color:white;margin-left:20px;text-decoration:none;'>הזמנה חדשה</a>
-  <a href='update_profile_secured.php' style='color:white;margin-left:20px;text-decoration:none;'>עדכון פרטים</a>
-  
-<a href="availability_stats.php" style="background:#8e44ad;">📈 סיכום סטטיסטי</a>
-
-      <a href='logout.php' style='color:white;float:left;text-decoration:none;'>🚪 התנתק</a>
-</div>
-
   <div class="dashboard">
     <h2>ברוך הבא מנהל</h2>
     <p>בחר פעולה:</p>

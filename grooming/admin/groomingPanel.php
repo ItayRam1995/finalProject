@@ -1,4 +1,4 @@
-
+<?php include '../../header.php'; ?>
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -60,7 +60,7 @@
 
   <script>
     function fetchAppointments() {
-      fetch('adminPanelServer.php')
+      fetch('groomingPanelServer.php')
         .then(res => res.json())
         .then(data => {
           const tbody = document.getElementById('appointments-table');

@@ -8,6 +8,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <style>
+
+        /* מגדיר משתנים של צבעים לשימוש חוזר */
         :root {
             --primary-color: #4A6FA5;
             --secondary-color: #166088;
@@ -19,6 +21,7 @@
             --warning-color: #F7D154;
         }
         
+        /* מאפס מרווחים פנימיים/חיצוניים */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -26,12 +29,14 @@
             font-family: 'Segoe UI', 'Arial', sans-serif;
         }
         
+        /* רקע בהיר, צבע טקסט כהה, מרווח שורות */
         body {
             background-color: #f5f7fa;
             color: #333;
             line-height: 1.6;
         }
         
+        /* תיבת התוכן המרכזית של הדף - מרכז את התוכן, מוסיף רקע לבן, פינות מעוגלות וצל */
         .container {
             max-width: 900px;
             margin: 30px auto;
@@ -41,6 +46,7 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
+        /* ממקם את הכותרת במרכז, קו תחתון עדין */
         header {
             text-align: center;
             margin-bottom: 30px;
@@ -57,12 +63,34 @@
             color: #777;
         }
         
+        /*  באנר מידע עם הסבר, רקע תכלת וגבול שמאלי כחול */
+        .first-time-banner {
+            background-color: rgba(79, 193, 227, 0.15);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--accent-color);
+        }
+        
+        .first-time-banner h2 {
+            color: var(--secondary-color);
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .first-time-banner p {
+            color: #555;
+            margin-bottom: 5px;
+        }
+        
+        /* ארגון השדות של הטופס השדות בשורות של שניים בשורה אחת על מסכים רחבים, ותעבור לשורה אחת מתחת לשנייה במסכים צרים */
         .form-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
         }
         
+        /* רקע בהיר עם צל קל */
         .form-section {
             background-color: #f8f9fa;
             border-radius: 8px;
@@ -84,12 +112,14 @@
             color: var(--accent-color);
         }
         
+        /* שדה טופס בגודל חצי-מסך */
         .form-group {
             margin-bottom: 15px;
             width: 48%;
             position: relative;
         }
         
+        /* שדה ברוחב מלא */
         .form-group-full {
             width: 100%;
             position: relative;
@@ -109,6 +139,7 @@
             color: #555;
         }
         
+        /* שדות טקסט בטופס - נותן עיצוב אחיד */
         input[type="text"],
         input[type="number"],
         input[type="tel"],
@@ -122,6 +153,7 @@
             transition: border 0.3s;
         }
         
+        /* אפקט בפוקוס: מדגיש שדה פעיל */
         input[type="text"]:focus,
         input[type="number"]:focus,
         input[type="tel"]:focus,
@@ -132,6 +164,7 @@
             box-shadow: 0 0 0 3px rgba(79, 193, 227, 0.2);
         }
         
+        /* העלאת תמונת כלב - קופסה עם גבול מקווקו, תצוגה מקדימה מוסתרת, נחשפת כשיש תמונה */
         .image-upload {
             display: flex;
             flex-direction: column;
@@ -145,21 +178,25 @@
             transition: all 0.3s;
         }
         
+        /* כאשר המשתמש עובר עם העכבר – משנה את צבע הגבול לצבע תכלת כהדגשה */
         .image-upload:hover {
             border-color: var(--accent-color);
         }
         
+        /* אייקון גדול, אפור, עם ריווח מתחתיו */
         .image-upload i {
             font-size: 48px;
             color: #aaa;
             margin-bottom: 10px;
         }
         
+        /* טקסט הסבר באזור ההעלאה – באפור */
         .image-upload p {
             color: #777;
             text-align: center;
         }
-        
+
+        /* אזור להצגת התמונה שהועלתה – תצוגה מקדימה */
         .image-preview {
             width: 150px;
             height: 150px;
@@ -170,12 +207,14 @@
             border: 3px solid var(--light-color);
         }
         
+        /* ממלא את כל הריבוע */
         .image-preview img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
         
+        /* כפתור כללי בדף */
         .btn {
             display: inline-block;
             background-color: var(--primary-color);
@@ -190,12 +229,14 @@
             transition: all 0.3s;
         }
         
+        /* כאשר העכבר מרחף מעל כפתור כללי */
         .btn:hover {
             background-color: var(--secondary-color);
             transform: translateY(-2px);
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
         }
         
+        /* כפתור השליחה */
         .btn-submit {
             background-color: var(--success-color);
             margin-top: 20px;
@@ -204,14 +245,17 @@
             font-size: 18px;
         }
         
+
         .btn-submit:hover {
             background-color: #3ca574;
         }
         
+        /* מסתיר את אלמנט הקלט לקובץ */
         #file-input {
             display: none;
         }
         
+        /* הודעות מערכת מעוצבות */
         .status-message {
             padding: 15px;
             margin: 20px 0;
@@ -221,24 +265,28 @@
             display: none;
         }
         
+        /* הודעת הצלחה */
         .status-success {
             background-color: rgba(71, 184, 129, 0.2);
             color: var(--success-color);
             border: 1px solid var(--success-color);
         }
         
+        /* הודעת שגיאה */
         .status-error {
             background-color: rgba(236, 87, 102, 0.2);
             color: var(--error-color);
             border: 1px solid var(--error-color);
         }
         
+        /* הודעת מידע כללי */
         .status-info {
             background-color: rgba(79, 193, 227, 0.2);
             color: var(--accent-color);
             border: 1px solid var(--accent-color);
         }
         
+        /* שגיאה בשליחה */
         .field-error {
             color: var(--error-color);
             font-size: 14px;
@@ -247,21 +295,24 @@
             font-weight: 600;
         }
         
+        /* שדה קלט כאשר יש בו שגיאה */
         .input-error {
             border: 1px solid var(--error-color) !important;
             background-color: rgba(236, 87, 102, 0.05);
         }
         
+         /* כוכבית אדומה לשדות חובה */
         .required::after {
             content: " *";
             color: var(--error-color);
         }
         
-        /* סגנון של שדה ריק שאינו תקין */
+        /*  שדה ריק שאינו תקין*/
         .required-field-error {
             position: relative;
         }
         
+        /* הודעת שגיאה מובנית מתחת לשדה שלא מולא */
         .required-field-error::after {
             content: "שדה חובה!";
             position: absolute;
@@ -313,9 +364,15 @@
 <body>
     <div class="container">
         <header>
-            <h1>הרשמת כלב חדש למערכת</h1>
-            <p>אנא מלאו את הפרטים הבאים כדי להוסיף את הכלב שלכם למערכת.</p>
+            <h1>רישום הכלב הראשון שלך</h1>
+            <p>כדי להתחיל להשתמש באתר, אנא רשום את הכלב הראשון שלך</p>
         </header>
+        
+        <div class="first-time-banner">
+            <h2><i class="fas fa-paw"></i> ברוך הבא לפנסיון הכלבים!</h2>
+            <p>לפני שתוכל להשתמש בשירותים שלנו, עליך לרשום לפחות כלב אחד במערכת.</p>
+            <p>לאחר רישום הכלב הראשון, תוכל להשתמש בכל השירותים שלנו ואף להוסיף כלבים נוספים בעתיד.</p>
+        </div>
         
         <div id="status-message" class="status-message"></div>
         
@@ -463,27 +520,36 @@
                 </div>
             </div>
             
-            <button type="submit" class="btn btn-submit"><i class="fas fa-plus-circle"></i> הוסף את הכלב למערכת</button>
+            <button type="submit" class="btn btn-submit"><i class="fas fa-plus-circle"></i> רשום את הכלב הראשון שלי</button>
         </form>
     </div>
 
     <script>
         $(document).ready(function() {
             // תצוגה מקדימה של התמונה
+            // מאזין לשינויים בשדה הקלט של הקובץ (כשהמשתמש בוחר קובץ)
             $('#file-input').change(function() {
+                // הקובץ הראשון שנבחר
                 const file = this.files[0];
+                //  FileReader() בודק שאכן נבחר קובץ ויוצר אובייקט
                 if (file) {
+                    //  מאפשר לקרוא את תוכן הקובץ בצד לקוח ללא העלאה לשרת
                     const reader = new FileReader();
+                    // כשהקובץ נטען הפונקציה מתבצעת
                     reader.onload = function(e) {
+                        // תוצאת הקריאה של הקובץ – כלומר התוכן של הקובץ נשטל בטופס במקום של הכתובת
                         $('#preview-img').attr('src', e.target.result);
+                        // תיבת התצוגה עם התמונה
                         $('#image-preview').show();
                     }
+                    //  קורא את תוכן הקובץ, וממיר אותו למחרוזת כדי להציג את התמונה מיידית מבלי להעלות לשרת
                     reader.readAsDataURL(file);
                 }
             });
             
             // פונקציית מילוי אוטומטי של הטופס
             $('#auto-fill-btn').click(function(e) {
+                //  למנוע מהדפדפן לבצע פעולה אוטומטית של בעקבות הקלקה
                 e.preventDefault();
                 
                 // פונקציה ליצירת מספר שבב אקראי
@@ -567,6 +633,7 @@
             
             // ולידציית הטופס לפני שליחה
             $('#dog-registration-form').submit(function(e) {
+                //  למנוע מהדפדפן לבצע פעולה אוטומטית של שליחת הטופס בעקבות הקלקה
                 e.preventDefault();
                 
                 // איפוס כל הודעות השגיאה
@@ -577,10 +644,13 @@
                 
                 // בדיקת תקינות הטופס
                 let isValid = true;
+                //  שישמור את השדה הראשון עם שגיאה (לצורך גלילה אליו)
                 let firstErrorField = null;
+                // מערך שבו יישמרו שמות השדות החסרים
                 let emptyFields = [];
                 
                 // מיפוי שדות חובה עם שמות תצוגה 
+                // מערך אובייקטים שכל אחד מהם מייצג שדה חובה בטופס
                 const requiredFields = [
                     { id: 'dog-name', name: 'שם הכלב', errorMsg: 'יש להזין את שם הכלב' },
                     { id: 'gender', name: 'מין', errorMsg: 'יש לבחור את מין הכלב' },
@@ -601,33 +671,50 @@
                 ];
                 
                 // בדיקת כל שדות החובה
+                //  לולאה שעוברת על כל שדה חובה במערך
                 for (const field of requiredFields) {
+                    // מציאת האלמנט המתאים למזהה של השדה
                     const $field = $('#' + field.id);
+                    //  הערך הנוכחי של השדה
                     let value = $field.val();
+                    // הגדרת משתנה שיקבע אם השדה ריק
                     let isEmpty = false;
                     
                     // טיפול מיוחד בשדה קובץ
                     if (field.id === 'file-input') {
+                        // בדיקה האם הרשימה של הקבצים ריקה או שלא נבחר אף קובץ
                         isEmpty = !$field[0].files || !$field[0].files.length;
+                        // טיפול בשאר השדות שהן לא קובץ 
+                        // אם הערך הוא מחרוזת, בודק גם שהיא לא מכילה רק רווחים או שהערך של הקלט ריק
                     } else {
                         isEmpty = !value || (typeof value === 'string' && !value.trim());
                     }
                     
                     if (isEmpty) {
                         // סימון השדה כשגוי ותצוגת הודעת שגיאה
+                        // מוסיף מסגרת אדומה ורקע
                         $field.addClass('input-error');
                         
                         // אם יש אלמנט שגיאה מתחת לשדה - להציג אותו
+                        // נכון לעכשיו לכל האלמנטים יש אלמנט שגיאה
                         const $errorElement = $('#' + field.id + '-error');
+                        // בודק אם האלמנט באמת קיים בדף, כלומר אם נמצא לפחות אלמנט אחד עם אותו ID
                         if ($errorElement.length) {
                             $errorElement.show();
                         } else {
                             // אם אין אלמנט שגיאה, להוסיף אפקט ויזואלי
+                            // ברגע שמחלקת ההורה מקבלת את המחלקה, מופיעה תצוגה של "שדה חובה!" מתחת לשדה
                             $field.parent().addClass('required-field-error');
                         }
                         
+                        // מסמן שהטופס אינו תקין
                         isValid = false;
+                        // שומר את השדה הראשון שבו נמצאה שגיאה, לצורך גלילה אליו מאוחר יותר
+                        // זה מבטיח שנגלול תמיד לשדה הבעייתי הראשון בלבד, ולא לכל השדות ביחד
+                        // אם firstErrorField כבר הוגדר קודם – שמור אותו כמו שהוא
+                        // אחרת – הגדר אותו עכשיו כ־ $field
                         firstErrorField = firstErrorField || $field;
+                        // מוסיף את שם השדה אחר כך כדי להציג למשתמש הודעה עם כל השדות הבעייתים 
                         emptyFields.push(field.name);
                     }
                 }
@@ -641,6 +728,7 @@
                         errorMessage = 'נא למלא את השדה: <strong>' + emptyFields[0] + '</strong>';
                     } else {
                         // אם חסרים מספר שדות - הצג רשימה של כל השדות החסרים
+                        // מחבר את כל שמות השדות יחד לרשימה עם פסיקים ביניהם, וכל אחד עטוף בתג <strong>
                         errorMessage = 'השדות הבאים חסרים לצורך סיום ההרשמה : <strong>' + emptyFields.join('</strong>, <strong>') + '</strong>';
                     }
                     
@@ -650,8 +738,8 @@
                     // גלילה לשדה הראשון עם שגיאה
                     if (firstErrorField) {
                         $('html, body').animate({
-                            scrollTop: firstErrorField.offset().top - 200
-                        }, 3000);
+                            scrollTop: firstErrorField.offset().top - 250
+                        }, 4000);
                     }
                     
                     return false;
@@ -662,19 +750,17 @@
                 
                 const formData = new FormData(this);
                 
-                // הוספת לוג של תוכן הטופס לקונסול לדיבוג
-                console.log("שולח טופס:");
-                for (let pair of formData.entries()) {
-                    console.log(pair[0] + ': ' + (pair[1] instanceof File ? pair[1].name : pair[1]));
-                }
-                
+                // לתקשר עם השרת מבלי לרענן את הדף כולו
                 $.ajax({
                     url: 'dog_registrationServer.php',
                     type: 'POST',
+                    // מכיל את כל שדות הטופס כולל קבצים
                     data: formData,
                     contentType: false,
                     processData: false,
+                    
                     success: function(response) {
+                        // מדפיס את התגובה של השרת בקונסול
                         console.log("תשובה התקבלה:", response); // לוג לדיבוג
                         
                         try {
@@ -684,12 +770,17 @@
                                 showStatusMessage('אירעה שגיאה בשמירת הנתונים. אנא בדוק את השדות שהזנת ונסה שנית.', 'error');
                                 return;
                             }
-                            
+                            // ממשיך לנסות לנתח את התשובה שהתקבלה מהשרת כ־ JSON
                             const result = JSON.parse(response);
                             if (result.status === 'success') {
-                                showStatusMessage('הכלב נרשם בהצלחה!', 'success');
-                                $('#dog-registration-form')[0].reset();
-                                $('#image-preview').hide();
+                                showStatusMessage('הכלב נרשם בהצלחה! מעביר אותך לדשבורד או לבחירת הכלב...', 'success');
+                                
+                                // הפניה לדשבורד המשתמש לאחר 3 שניות
+                                setTimeout(function() {
+                                    window.location.href = '../../registration/user/user_dashboard_secured.php';
+                                }, 3000);
+
+                                // אם הוא לא הצליח לקרוא את קובץ ה JSON
                             } else {
                                 // הודעת שגיאה ידידותית למשתמש
                                 let errorMsg = 'אירעה שגיאה בשמירת הנתונים: ';
@@ -713,11 +804,12 @@
                                         'veterinarian_phone': 'מספר טלפון של הווטרינר',
                                         'general_notes': 'הערות כלליות'
                                     };
-                                    
+                                    // אם יש מפתח במילון שמתאים לשם שהשרת החזיר אז השתמש בו, אחרת (למקרה שאין תרגום במילון) השתמש בשם המקורי כמו שהוא
                                     const fieldName = fieldNames[result.field] || result.field;
                                     errorMsg += 'שדה "' + fieldName + '" אינו תקין. ';
                                     
                                     // הדגשת השדה השגוי בטופס
+                                    // מחליף קו תחתון בקו מקשר כדי להתאים לשמות המזהים בדף
                                     $('#' + result.field.replace('_', '-')).addClass('input-error');
                                 } 
                                 
@@ -728,6 +820,7 @@
                                 
                                 showStatusMessage(errorMsg, 'error');
                             }
+                            // אם התגובה מהשרת אינה JSON תקין
                         } catch(e) {
                             console.error("שגיאת JSON:", e, "תשובה מקורית:", response);
                             
@@ -739,6 +832,7 @@
                             }
                         }
                     },
+                    // לא הצליח בכלל לתקשר עם השרת
                     error: function(xhr, status, error) {
                         console.error("שגיאת AJAX:", status, error, xhr.responseText);
                         showStatusMessage('לא ניתן להתחבר לשרת. אנא בדוק את החיבור לאינטרנט ונסה שנית.', 'error');
@@ -758,8 +852,11 @@
             
             function showStatusMessage(message, type) {
                 const statusMessage = $('#status-message');
+                // מכניס את תוכן ההודעה עצמה לתוך האלמנט
                 statusMessage.html(message);
+                // ניקוי עיצובים ישנים
                 statusMessage.removeClass('status-success status-error status-info');
+                //  הוספת המחלקה הרלוונטית
                 statusMessage.addClass('status-' + type);
                 statusMessage.show();
                 
