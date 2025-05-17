@@ -109,20 +109,27 @@ $sql = preg_replace('#=\s*,#', '= NULL,', $sql);
 try {
     // ביצוע השאילתא
     if ($conn->query($sql) === TRUE) {
+        // אם הצליח בביצוע, מחזיר תשובה JSON עם
         echo json_encode([
             'status' => 'success',
             'message' => 'הכלב נרשם בהצלחה!',
             'dog_id' => $conn->insert_id
         ]);
+        // אם לא הצליח בביצוע, נזרקת חריגה עם פרטי השגיאה
     } else {
         throw new Exception($conn->error);
     }
+    // נכנס לפה רק אם משהו השתבש בשאילתה
 } catch (Exception $e) {
+    // שומר את השגיאה ביומן השרת כולל השאילתה
     error_log('SQL Error: ' . $e->getMessage() . ' | Query: ' . $sql);
+    // מחזיר למשתמש תגובת JSON
     echo json_encode([
         'status' => 'error',
         'message' => 'שגיאה בהוספת הכלב למסד הנתונים: ' . $e->getMessage()
     ]);
+
+    // קטע שמתבצע בין אם הצליח ובין אם לא
 } finally {
     // סגירת החיבור למסד הנתונים 
     if (isset($conn) && $conn instanceof mysqli) {

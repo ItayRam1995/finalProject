@@ -233,8 +233,8 @@ $headerHeight = 140; // גובה ממוצע בפיקסלים
         
         <!-- לוגו -->
         <a class="doggy-header-logo">
+            <span> פנסיון כלבים</span>
             <span class="doggy-header-logo-icon">🐕</span>
-            <span>פנסיון כלבים</span>
         </a>
         
         <!-- מידע משתמש וכפתור התנתקות -->

@@ -7,33 +7,50 @@ $username = "itayrm_ItayRam";
 $password = "itay0547862155";
 $dbname = "itayrm_dogs_boarding_house";
 
+// התחברות למסד נתונים
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     echo json_encode(['error' => 'שגיאה בחיבור למסד הנתונים']);
     exit;
 }
 
+// קבלת נתוני הבקשה
+// לקרוא נתוני JSON
+// שנשלחו ולפרש אותם למערך שמתפקד כמו מילון
 $data = json_decode(file_get_contents("php://input"), true);
+// בודק האם המערך $data לא כולל מפתח בשם day או מפתח בשם time
+// אם לא – אין טעם להמשיך
 if (!isset($data['day']) || !isset($data['time'])) {
+     // מציין שהבקשה שהתקבלה שגויה 
     http_response_code(400);
+    // מחזיר תשובת שגיאה למשתמש בפורמט JSON
     echo json_encode(['error' => 'יש להזין תאריך ושעה']);
+
+    // עוצר מיד את ריצת הסקריפט
     exit;
 }
 
-// בדיקה אם כבר קיימת הזמנה לשעה הזו
+// לבדוק אם כבר קיימת הזמנת טיפוח שתפסה את אותו יום ושעה
 $check = $conn->prepare("SELECT id FROM grooming_appointments WHERE day = ? AND time = ? AND isTaken = 1");
 $check->bind_param("ss", $data['day'], $data['time']);
 $check->execute();
+// לאחסן בזיכרון המקומי של השרת את תוצאות השאילתה
 $check->store_result();
 
+// לבדוק האם התקבלו תוצאות בכלל
 if ($check->num_rows > 0) {
+
+    // מחזיר תשובת שגיאה למשתמש בפורמט JSON
     echo json_encode(['error' => 'השעה הזו כבר תפוסה']);
     $check->close();
     $conn->close();
+
+    // עוצר מיד את ריצת הסקריפט
     exit;
 }
 $check->close();
 
+// ליצור מזהה אישור אקראי, קצר וייחודי להזמנת הטיפוח
 $confirmation = strtoupper(bin2hex(random_bytes(3))); // לדוגמה: A1F2C3
 
 // קבלת סוג הטיפוח והמחיר מה-SESSION
@@ -58,8 +75,11 @@ if ($stmt->execute()) {
     unset($_SESSION['grooming_type']);
     unset($_SESSION['grooming_price']);
     
+    // להחזיר למשתמש קובץ JSON שמעיד שהזמנת הטיפוח הצליחה
+    // מחזיר את מספר האישור להזמנה ואת מזהה הכלב עבורו בוצעה ההזמנה
     echo json_encode(['success' => true, 'confirmation' => $confirmation, 'dog_id' => $dog_id]);
 } else {
+    // להחזיר למשתמש קובץ JSON עם שגיאה עם סיבת התקלה שקשורה בסד הנתונים
     echo json_encode(['error' => 'שגיאה בהוספת ההזמנה: ' . $stmt->error]);
 }
 
