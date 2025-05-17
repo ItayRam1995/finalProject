@@ -1,14 +1,22 @@
 <?php
 session_start();
+
+// התחברות למסד הנתונים
 $servername = "localhost";
 $username = "itayrm_ItayRam";
 $password = "itay0547862155";
 $dbname = "itayrm_dogs_boarding_house";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
-$conn->set_charset("utf8");
-if ($conn->connect_error) die("Connection failed: " . $conn->connect_error);
 
+// מאפשר עבודה עם טקסטים בעברית
+$conn->set_charset("utf8");
+if ($conn->connect_error) {
+    echo json_encode(['error' => 'שגיאה בחיבור למסד הנתונים']);
+    exit;
+}
+
+// מוודא שכל השדות הנדרשים הגיעו מהטופס
 if (!isset($_POST['username'], $_POST['password'], $_POST['user_type'])) {
     die("שגיאה: נתונים חסרים מהטופס.");
 }
@@ -17,16 +25,21 @@ $username = $_POST['username'];
 $password = $_POST['password'];
 $user_type = $_POST['user_type'];
 
-// עדכון השאילתה כדי לקבל גם את user_code
+//  חיפוש של משתמש במסד בטבלה לפי שם משתמש, סיסמה וסוג משתמש
 $stmt = $conn->prepare("SELECT * FROM users WHERE username = ? AND password = ? AND user_type = ?");
+// להציב את הפרמטרים בשאילתה
 $stmt->bind_param("ssi", $username, $password, $user_type);
+// להריץ את השאילתה
 $stmt->execute();
+// מכיל את השורות שהתקבלו מהשאילתה
 $result = $stmt->get_result();
 
+// אם התקבלו תוצאות מהשאילתה
 if ($result->num_rows > 0) {
+    // מערך של מילונים, כל מילון הוא שורה בטבלה של השאילתה
     $user = $result->fetch_assoc();
     
-    // שמירת נתוני המשתמש ב-SESSION כולל user_code
+    // שמירת נתוני המשתמש ב-SESSION 
     $_SESSION['user_id'] = $user['id'];
     $_SESSION['first_name'] = $user['first_name'];
     $_SESSION['username'] = $user['username'];
@@ -37,8 +50,10 @@ if ($result->num_rows > 0) {
         $_SESSION['user_code'] = $user['user_code'];
     } 
    
+    // אפ סוג המשתמש הוא מנהל - מפנה אותו לדשבורד המנהל
     if ($user['user_type'] == 1) {
         header("Location: admin/admin_dashboard_secured.php");
+    // אפ סוג המשתמש הוא משתמש רגיל - מפנה אותו לדשבורד המשתמש
     } else {
         header("Location: user/user_dashboard_secured.php");
     }
