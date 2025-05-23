@@ -145,15 +145,6 @@
       opacity: 0.7;
     }
 
-    /* ניהול הזמנות */
-    /* .link-button {
-      background-color: #6c757d;
-      text-align: center;
-      display: block;
-      margin: 30px auto 0;
-    } */
-
-
     @media (max-width: 600px) {
       .calendar, .time-slots {
         justify-content: flex-start;
@@ -454,12 +445,11 @@
       <div>12:00</div><div>12:30</div><div>13:00</div><div>13:30</div><div>14:00</div><div>14:30</div><div>15:00</div><div>15:30</div><div>16:00</div><div>16:30</div>
     </div>
     <button class="submit-button" id="submit-button" onclick="submitAppointment()">אשר הזמנה</button>
-    <!-- <a class="submit-button link-button" href="adminPanel.html">ניהול הזמנות</a> -->
   </div>
 </div>
 
 <script>
-  // משתנים שמייצגים אלמנטים חשובים בדף – כדי שנוכל לעבוד איתם אחר כך (למשל לשנות טקסט, להוסיף תוכן או להסתיר/להציג).
+  //  משתנים שמייצגים אלמנטים חשובים בדף כדי שנוכל לעבוד איתם אחר כך. למשל לשנות טקסט, להוסיף תוכן או להסתיר/להציג
     
     // האזור שבו נוצרים כפתורי הימים הזמינים בלוח השנה לפי טווח הזמנת הפנסיון שנבחרה
     const calendarContainer = document.getElementById('calendar-buttons');
@@ -476,7 +466,6 @@
     // הכפתור שמאשר את הזמנת הטיפוח
     const submitButton = document.getElementById('submit-button');
 
-
     // שעת הטיפוח שנבחרה על ידי המשתמש
     let selectedSlot = null;
     // היום שנבחר על ידי המשתמש
@@ -488,10 +477,8 @@
     // האם למשתמש יש הזמנות פנסיון פעילות לכלב
     let hasActiveReservations = false;
 
-
     //  קישור לכל שעות הטיפוח בדף
     const timeSlots = document.querySelectorAll('.time-slots div');
-
 
     // קבלת user_code ו-active_dog_id מה-SESSION
     const userCode = "<?php echo htmlspecialchars($_SESSION['user_code'] ?? ''); ?>";
@@ -1106,7 +1093,7 @@
       
       // אם יש הזמנת פנסיון מצרף אותה
       // הזמנת הפנסיון הפעילה שנבחרה עבור הכלב
-      if (selectedReservation) {
+      if (selectedReservation && selectedReservation.id) {
         appointmentData.reservation_id = selectedReservation.id;
       }
       
@@ -1137,8 +1124,13 @@
       .then(data => {
         // אם ההזמנה הצליחה
         if (data.success) {
-          // מציג למשתמש alert עם מספר האישור
-          alert(`ההזמנה נקלטה! מספר אישור: ${data.confirmation}`);
+          // מציג למשתמש alert עם מספר האישור והזמנת הפנסיון שקושרה
+          // alert(`ההזמנה נקלטה! מספר אישור: ${data.confirmation}`);
+          let successMessage = `ההזמנה נקלטה! מספר אישור: ${data.confirmation}`;
+          if (data.connected_reservation_id) {
+            successMessage += `\nההזמנה קושרה להזמנת פנסיון מס' ${data.connected_reservation_id}`;
+          }
+          alert(successMessage);
 
           // groomingAppServer כשהזמנת הטיפוח נרשמת בשרת באמצעות 
           // isTaken =1 נוסף לה בטבלת הטיפוח  הסימון 

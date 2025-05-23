@@ -58,7 +58,7 @@ $grooming_type = isset($_SESSION['grooming_type']) ? $_SESSION['grooming_type'] 
 $grooming_price = isset($_SESSION['grooming_price']) ? intval($_SESSION['grooming_price']) : 0;
 
 // קבלת קוד המשתמש מה-SESSION
-$user_code = isset($_SESSION['username']) ? $_SESSION['user_code'] : '';
+$user_code = isset($_SESSION['user_code']) ? $_SESSION['user_code'] : '';
 
 // קבלת מזהה הכלב הפעיל מה-SESSION
 $dog_id = null;
@@ -66,9 +66,15 @@ if (isset($_SESSION['active_dog_id'])) {
     $dog_id = $_SESSION['active_dog_id'];
 }
 
-// כאן שמים את isTaken = 1 ומעדכנים את סוג הטיפוח, המחיר ומזהה הכלב
-$stmt = $conn->prepare("INSERT INTO grooming_appointments (day, time, confirmation, isTaken, user_code, grooming_type, grooming_price, dog_id) VALUES (?, ?, ?, 1, ?, ?, ?, ?)");
-$stmt->bind_param("sssssii", $data['day'], $data['time'], $confirmation, $user_code, $grooming_type, $grooming_price, $dog_id);
+// קבלת reservation_id מהנתונים שנשלחו (אם קיים)
+$connected_reservation_id = null;
+if (isset($data['reservation_id']) && !empty($data['reservation_id'])) {
+    $connected_reservation_id = intval($data['reservation_id']);
+}
+
+// הכנסת ההזמנה עם קישור להזמנת הפנסיון
+$stmt = $conn->prepare("INSERT INTO grooming_appointments (day, time, confirmation, isTaken, user_code, grooming_type, grooming_price, dog_id, connected_reservation_id) VALUES (?, ?, ?, 1, ?, ?, ?, ?, ?)");
+$stmt->bind_param("sssssiii", $data['day'], $data['time'], $confirmation, $user_code, $grooming_type, $grooming_price, $dog_id, $connected_reservation_id);
 
 if ($stmt->execute()) {
     // אם ההזמנה הצליחה, מוחקים את המידע מה-SESSION כדי שלא יישמר להזמנה הבאה
@@ -76,10 +82,14 @@ if ($stmt->execute()) {
     unset($_SESSION['grooming_price']);
     
     // להחזיר למשתמש קובץ JSON שמעיד שהזמנת הטיפוח הצליחה
-    // מחזיר את מספר האישור להזמנה ואת מזהה הכלב עבורו בוצעה ההזמנה
-    echo json_encode(['success' => true, 'confirmation' => $confirmation, 'dog_id' => $dog_id]);
+    echo json_encode([
+        'success' => true, 
+        'confirmation' => $confirmation, 
+        'dog_id' => $dog_id,
+        'connected_reservation_id' => $connected_reservation_id
+    ]);
 } else {
-    // להחזיר למשתמש קובץ JSON עם שגיאה עם סיבת התקלה שקשורה בסד הנתונים
+    // להחזיר למשתמש קובץ JSON עם שגיאה עם סיבת התקלה שקשורה במסד הנתונים
     echo json_encode(['error' => 'שגיאה בהוספת ההזמנה: ' . $stmt->error]);
 }
 

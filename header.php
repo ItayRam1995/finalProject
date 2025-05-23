@@ -84,10 +84,6 @@ $links = $user_type == 1
     ? [
         '../../registration/admin/admin_dashboard_secured.php' => 'דשבורד מנהל',
         '../../grooming/admin/groomingPanel.php' => 'הזמנות טיפוח',
-        '../../registration/admin/users_list.php' => 'משתמשים',
-        '../../registration/admin/all_orders.php' => 'הזמנות',
-        '../../registration/admin/update_availability.php' => 'עדכון זמינות',
-        '../../registration/admin/delete_order.php' => 'מחיקת הזמנה',
         '../../inventory_management/admin/inventory_management.php' => 'ניהול מלאי'
     ]
     : [
