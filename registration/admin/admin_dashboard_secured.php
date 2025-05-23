@@ -53,14 +53,16 @@ try {
     $activeReservationsList = $activeReservationsQuery->fetchAll(PDO::FETCH_ASSOC);
 
     // 3. תורי טיפוח השבוע
-    $groomingQuery = $pdo->query("
+        $groomingQuery = $pdo->query("
         SELECT g.*, d.dog_name, u.first_name, u.last_name 
         FROM grooming_appointments g 
         LEFT JOIN dogs d ON g.dog_id = d.dog_id 
         LEFT JOIN users u ON g.user_code = u.user_code 
-        WHERE g.day >= CURDATE() AND g.day <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+        WHERE g.day >= CURDATE() 
+        AND g.day <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+        AND g.isTaken = 1 
         ORDER BY g.day ASC, STR_TO_DATE(g.time, '%H:%i') ASC
-    ");
+        ");
 
     // לשלוף את כל התוצאות שהתקבלו ולשמור אותן במילון
     $groomingAppointments = $groomingQuery->fetchAll(PDO::FETCH_ASSOC);
@@ -82,6 +84,7 @@ try {
         FROM reservation 
         WHERE MONTH(created_at) = MONTH(CURDATE()) 
         AND YEAR(created_at) = YEAR(CURDATE())
+        AND status = 'paid'
     ")->fetch()['revenue'] ?? 0;
 
     $groomingRevenue = $pdo->query("
@@ -89,6 +92,7 @@ try {
         FROM grooming_appointments 
         WHERE MONTH(created_at) = MONTH(CURDATE()) 
         AND YEAR(created_at) = YEAR(CURDATE())
+        AND isTaken = 1
     ")->fetch()['revenue'] ?? 0;
 
     $monthlyRevenue = $reservationRevenue + $groomingRevenue;
@@ -110,11 +114,10 @@ try {
     
     // 8. סוגי טיפוח לשבוע הקרוב - לפי סוג
     $groomingTypeQuery = $pdo->query("
-        SELECT 
-            grooming_type,
-            COUNT(*) as count
+        SELECT grooming_type, COUNT(*) as count
         FROM grooming_appointments 
-        WHERE day >= CURDATE() AND day <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+        WHERE day >= CURDATE() AND isTaken = 1
+        AND day <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)  
         GROUP BY grooming_type
         ORDER BY count DESC
     ");
