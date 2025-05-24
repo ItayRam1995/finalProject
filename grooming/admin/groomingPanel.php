@@ -32,7 +32,7 @@
     
     /* מוסיף רקע לבן, הצללה, ריווח פנימי ופינות מעוגלות */
     .container {
-      max-width: 1200px;
+      max-width: 1375px;
       margin: 0 auto;
       background: white;
       border-radius: 8px;
@@ -88,16 +88,33 @@
     
     /* עיצוב תג של היום ומחר בעמודה תאריך */
     .badge {
-      padding: 5px 10px;
-      border-radius: 20px;
+      padding: 2px 6px;
+      border-radius: 12px;
       color: white;
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       font-weight: bold;
+      display: inline-block;
+      margin-bottom: 2px;
+      white-space: nowrap;
+    }
+    
+    /* הצגת התאריך בשורות נפרדות */
+    .date-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      font-size: 0.85rem;
     }
     
     /* תג בצבע כחול ראשי	 */
     .badge-primary {
       background-color: var(--primary);
+    }
+    
+    /*תג לתאריך מחר*/
+    .badge-tomorrow {
+      background-color: #36b9cc;
     }
     
     /* מיכל הטבלה הראשי עם כותרות קבועות */
@@ -419,6 +436,18 @@
         flex-direction: column;
         gap: 5px;
       }
+      
+        .table-header th:nth-child(2), .table-body td:nth-child(2) { width: 140px; min-width: 140px; } /* תאריך רחב יותר במובייל */
+  
+      .date-cell {
+        font-size: 0.8rem;
+      }
+      
+      .badge {
+        font-size: 0.65rem;
+        padding: 1px 4px;
+      }
+      
     }
     
     /* סמל טעינה */
@@ -527,6 +556,23 @@
       font-size: 0.85rem;
       color: var(--primary-dark);
     }
+    
+    /* רוחבים קבועים לעמודות */
+    .table-header th:nth-child(1), .table-body td:nth-child(1) { width: 50px; min-width: 50px; } /* # */
+    .table-header th:nth-child(2), .table-body td:nth-child(2) { width: 120px; min-width: 120px; } /* תאריך */
+    .table-header th:nth-child(3), .table-body td:nth-child(3) { width: 80px; min-width: 80px; } /* שעה */
+    .table-header th:nth-child(4), .table-body td:nth-child(4) { width: 100px; min-width: 100px; } /* מספר אישור */
+    .table-header th:nth-child(5), .table-body td:nth-child(5) { width: 150px; min-width: 150px; } /* פרטי לקוח */
+    .table-header th:nth-child(6), .table-body td:nth-child(6) { width: 120px; min-width: 120px; } /* שם הכלב */
+    .table-header th:nth-child(7), .table-body td:nth-child(7) { width: 120px; min-width: 120px; } /* סוג טיפוח */
+    .table-header th:nth-child(8), .table-body td:nth-child(8) { width: 80px; min-width: 80px; } /* מחיר */
+    .table-header th:nth-child(9), .table-body td:nth-child(9) { width: 120px; min-width: 120px; } /* נוצר בתאריך */
+    .table-header th:nth-child(10), .table-body td:nth-child(10) { width: 150px; min-width: 150px; } /* ביטול הזמנה */
+    
+    
+    /*...................................*/
+    
+
   </style>
 </head>
 <body>
@@ -1121,9 +1167,21 @@
         // מוסיף תגית עם טקסט "היום" או "מחר" בצבע שונה בהתאם
         let dateDisplay = formattedDate;
         if (isToday) {
-          dateDisplay = `<span class="badge badge-primary">היום</span> ${formattedDate}`;
+          dateDisplay = `
+            <div class="date-cell">
+              <span class="badge badge-primary">היום</span>
+              <span>${formattedDate}</span>
+            </div>
+          `;
         } else if (isTomorrow) {
-          dateDisplay = `<span class="badge" style="background-color: #36b9cc;">מחר</span> ${formattedDate}`;
+          dateDisplay = `
+            <div class="date-cell">
+              <span class="badge badge-tomorrow">מחר</span>
+              <span>${formattedDate}</span>
+            </div>
+          `;
+        } else {
+          dateDisplay = `<div class="date-cell"><span>${formattedDate}</span></div>`;
         }
         
         // יצירת שורת הזמנה בטבלה
