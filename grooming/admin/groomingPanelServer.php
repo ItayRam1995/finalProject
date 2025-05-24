@@ -35,13 +35,16 @@ $conn->set_charset("utf8");
 
 // שאילתה לשליפת ההזמנות הפעילות עם פרטי המשתמש ושם הכלב
 // רק הזמנות שהתאריך והשעה שלהן גדולים מהתאריך והשעה הנוכחיים
+// ורק הזמנות טיפוח שהזמנת הפנסיון המקושרת אליהן עדיין קיימת
 $query = "SELECT g.id, g.day, g.time, g.confirmation, g.created_at, 
-                g.grooming_type, g.grooming_price, g.dog_id,
+                g.grooming_type, g.grooming_price, g.dog_id, g.connected_reservation_id,
                 u.first_name, u.last_name, u.phone, 
-                d.dog_name
+                d.dog_name,
+                r.id as reservation_id, r.start_date as reservation_start, r.end_date as reservation_end
           FROM grooming_appointments g
           LEFT JOIN users u ON g.user_code = u.user_code
           LEFT JOIN dogs d ON g.dog_id = d.dog_id
+          INNER JOIN reservation r ON g.connected_reservation_id = r.id
           WHERE g.isTaken = 1 
           AND (
               g.day > CURDATE() 
