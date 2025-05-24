@@ -32,7 +32,7 @@
     
     /* מוסיף רקע לבן, הצללה, ריווח פנימי ופינות מעוגלות */
     .container {
-      max-width: 1375px;
+      max-width: 1775px; /*  לתמוך ביותר עמודות בטבלה */
       margin: 0 auto;
       background: white;
       border-radius: 8px;
@@ -115,6 +115,44 @@
     /*תג לתאריך מחר*/
     .badge-tomorrow {
       background-color: #36b9cc;
+    }
+    
+    /* תגי סטטוס הזמנה */
+    .status-active {
+      background-color: var(--success);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    
+    .status-cancelled {
+      background-color: #6c757d;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    
+    /* תגי סטטוס תשלום */
+    .status-paid {
+      background-color: #198754;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    
+    .status-unpaid {
+      background-color: var(--danger);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: bold;
     }
     
     /* מיכל הטבלה הראשי עם כותרות קבועות */
@@ -414,16 +452,16 @@
       
       /* הוספת גלילה אופקית במובייל */
       .table-body table {
-        min-width: 800px; /* רוחב מינימלי של הטבלה */
+        min-width: 1200px; /*  לתמוך ביותר עמודות - רוחב מינימלי של הטבלה */
         display: block;
         /* מוסיף סרגל גלילה אופקי אם הטבלה רחבה מדי */
-        overflow-x: auto;
+        /* overflow-x: auto; */
         /* מונע שבירת שורות בתוך התאים כך שהשורות יזוזו אופקית במקום להישבר לגובה */
         white-space: nowrap;
       }
 
       .table-header table {
-        min-width: 800px; /* רוחב מינימלי של הטבלה */
+        min-width: 1200px; /* לתמוך ביותר עמודות - רוחב מינימלי של הטבלה */
       }
       
       /* מציג טור אחד בלבד — כלומר, כל כרטיס יוצג בשורה נפרדת */
@@ -557,7 +595,7 @@
       color: var(--primary-dark);
     }
     
-    /* רוחבים קבועים לעמודות */
+    /* רוחבים קבועים לעמודות - 13 עמודות */
     .table-header th:nth-child(1), .table-body td:nth-child(1) { width: 50px; min-width: 50px; } /* # */
     .table-header th:nth-child(2), .table-body td:nth-child(2) { width: 120px; min-width: 120px; } /* תאריך */
     .table-header th:nth-child(3), .table-body td:nth-child(3) { width: 80px; min-width: 80px; } /* שעה */
@@ -566,8 +604,11 @@
     .table-header th:nth-child(6), .table-body td:nth-child(6) { width: 120px; min-width: 120px; } /* שם הכלב */
     .table-header th:nth-child(7), .table-body td:nth-child(7) { width: 120px; min-width: 120px; } /* סוג טיפוח */
     .table-header th:nth-child(8), .table-body td:nth-child(8) { width: 80px; min-width: 80px; } /* מחיר */
-    .table-header th:nth-child(9), .table-body td:nth-child(9) { width: 120px; min-width: 120px; } /* נוצר בתאריך */
-    .table-header th:nth-child(10), .table-body td:nth-child(10) { width: 150px; min-width: 150px; } /* ביטול הזמנה */
+    .table-header th:nth-child(9), .table-body td:nth-child(9) { width: 100px; min-width: 100px; } /* סטטוס הזמנה */
+    .table-header th:nth-child(10), .table-body td:nth-child(10) { width: 100px; min-width: 100px; } /* סטטוס תשלום */
+    .table-header th:nth-child(11), .table-body td:nth-child(11) { width: 120px; min-width: 120px; } /* פנסיון מקושר */
+    .table-header th:nth-child(12), .table-body td:nth-child(12) { width: 120px; min-width: 120px; } /* נוצר בתאריך */
+    .table-header th:nth-child(13), .table-body td:nth-child(13) { width: 150px; min-width: 150px; } /* ביטול הזמנה */
     
     
     /*...................................*/
@@ -627,6 +668,24 @@
           <div class="card-title">סה"כ כלבים</div>
           <div class="card-value" id="dogs-count">0</div>
         </div>
+
+        <!--  תשלומים ששולמו -->
+        <div class="card">
+          <div class="card-icon">
+            <i class="fas fa-credit-card"></i>
+          </div>
+          <div class="card-title">הזמנות ששולמו</div>
+          <div class="card-value" id="paid-count">0</div>
+        </div>
+
+        <!--  תשלומים שלא שולמו -->
+        <div class="card">
+          <div class="card-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div class="card-title">הזמנות שלא שולמו</div>
+          <div class="card-value" id="unpaid-count">0</div>
+        </div>
     </div>
     
     <!-- כלי סינון ושליטה  -->
@@ -653,7 +712,7 @@
 
     </div>
 
-    <!-- אזור סינון מתקדם להזמנות הטיפוח, לפי שלושה פילטרים: תאריך, סוג טיפוח וטווח מחירים. וכפתור רענון -->
+    <!-- אזור סינון מתקדם להזמנות הטיפוח, לפי תאריך, סוג טיפוח, מחיר, סטטוס הזמנה וסטטוס תשלום. וכפתור רענון -->
     <div class="controls">
 
       <!-- מיכל עוטף לכלי הסינון -->
@@ -702,6 +761,26 @@
           <option value="200-300">200-300 ₪</option>
           <option value="300+">מעל 300 ₪</option>
         </select>
+
+        <!-- סינון לפי סטטוס הזמנה בתוך אזור הסינון -->
+        <label for="appointment-status-filter" style="margin-right: 15px;">סטטוס הזמנה:</label>
+        <!-- בכל שינוי בבחירה, מופעלת הפונקציה שמסננת את ההזמנות בהתאם לסטטוס ההזמנה שנבחר. -->
+        <select id="appointment-status-filter" onchange="filterAppointments()">
+          <!-- אין סינון לפי סטטוס הזמנה -->
+          <option value="all">הכל</option>
+          <option value="active">פעילה</option>
+          <option value="cancelled">בוטלה</option>
+        </select>
+
+        <!-- סינון לפי סטטוס תשלום בתוך אזור הסינון -->
+        <label for="payment-status-filter" style="margin-right: 15px;">סטטוס תשלום:</label>
+        <!-- בכל שינוי בבחירה, מופעלת הפונקציה שמסננת את ההזמנות בהתאם לסטטוס התשלום שנבחר. -->
+        <select id="payment-status-filter" onchange="filterAppointments()">
+          <!-- אין סינון לפי סטטוס תשלום -->
+          <option value="all">הכל</option>
+          <option value="paid">שולם</option>
+          <option value="unpaid">לא שולם</option>
+        </select>
         
         <!-- כפתור רענון הנתונים בעמוד ניהול ההזמנות -->
         <!-- לוודא שהמידע הוא העדכני ביותר -->
@@ -737,6 +816,9 @@
               <th>שם הכלב</th>
               <th>סוג טיפוח</th>
               <th>מחיר</th>
+              <th>סטטוס הזמנה</th>
+              <th>סטטוס תשלום</th>
+              <th>הזמנת שהייה מקושרת</th>
               <th>נוצר בתאריך</th>
               <th>ביטול הזמנה</th>
             </tr>
@@ -759,6 +841,9 @@
               <th>שם הכלב</th>
               <th>סוג טיפוח</th>
               <th>מחיר</th>
+              <th>סטטוס הזמנה</th>
+              <th>סטטוס תשלום</th>
+              <th>הזמנת שהייה מקושרת</th>
               <th>נוצר בתאריך</th>
               <th>ביטול הזמנה</th>
             </tr>
@@ -767,7 +852,7 @@
           <tbody id="appointments-table">
             <tr>
               <!-- שורה אחת בודדת שמכסה את כל העמודות ומציגה טוען נתונים עם עיגול מסתובב -->
-              <td colspan="10" class="text-center">
+              <td colspan="13" class="text-center">
                 <div class="loader"></div>
                 טוען נתונים...
               </td>
@@ -807,6 +892,28 @@
       return new Date(parts[0], parts[1] - 1, parts[2]);
     }
     
+    // פונקציה לעיצוב סטטוס הזמנה
+    function formatAppointmentStatus(status) {
+      if (status === 'active') {
+        return '<span class="status-active">פעילה</span>';
+      } else if (status === 'cancelled') {
+        return '<span class="status-cancelled">בוטלה</span>';
+      } else {
+        return '<span class="status-cancelled">לא ידוע</span>';
+      }
+    }
+    
+    // פונקציה לעיצוב סטטוס תשלום
+    function formatPaymentStatus(status) {
+      if (status === 'paid') {
+        return '<span class="status-paid">שולם</span>';
+      } else if (status === 'unpaid') {
+        return '<span class="status-unpaid">לא שולם</span>';
+      } else {
+        return '<span class="status-unpaid">לא ידוע</span>';
+      }
+    }
+    
     // משתנה לשמירת נתוני ההזמנות
     let appointmentsData = [];
     
@@ -814,7 +921,7 @@
     function fetchAppointments() {
 
       // מנקה את הטבלה ומציג שורת טעינה עם אנימציה
-      document.getElementById('appointments-table').innerHTML = '<tr><td colspan="10" class="text-center"><div class="loader"></div> טוען נתונים...</td></tr>';
+      document.getElementById('appointments-table').innerHTML = '<tr><td colspan="13" class="text-center"><div class="loader"></div> טוען נתונים...</td></tr>';
       // שליחת בקשת GET ל־ PHP
       fetch('groomingPanelServer.php')
          // JSON כאשר מתקבלת תשובה, הופכים אותה לאובייקט 
@@ -834,7 +941,7 @@
           // מדפיס את השגיאה לקונסול
           console.error(err);
           // מחליף את שורת הטעינה בהודעת שגיאה בטבלה
-          document.getElementById('appointments-table').innerHTML = '<tr><td colspan="10" class="text-center"><i class="fas fa-exclamation-triangle"></i> שגיאה בטעינת נתונים</td></tr>';
+          document.getElementById('appointments-table').innerHTML = '<tr><td colspan="13" class="text-center"><i class="fas fa-exclamation-triangle"></i> שגיאה בטעינת נתונים</td></tr>';
           // מציג הודעת שגיאה למשתמש בעמוד
           showAlert('error', 'אירעה שגיאה בטעינת הנתונים. נסה שוב מאוחר יותר.');
         });
@@ -898,7 +1005,7 @@
       }
     }
     
-    // עדכון לוח הסטטיסטיקות העליון בדף ניהול ההזמנות – ארבעת הכרטיסים שמציגים מידע כולל על הזמנות פעילויות, היום, לשבוע הקרוב וכמות כלבים ייחודיים
+    // עדכון לוח הסטטיסטיקות העליון בדף  – כרטיסים שמציגים מידע כולל על הזמנות פעילויות, היום, לשבוע הקרוב, כמות כלבים ייחודיים וסטטוס תשלומים
     function updateStatistics(data) {
       // יוצר אובייקט תאריך עבור היום הנוכחי
       const today = new Date();
@@ -909,12 +1016,15 @@
       const nextWeek = new Date(today);
       nextWeek.setDate(today.getDate() + 7);
       
-      // מציב את כמות הזמנות הטיפוח הפעילות בכרטיס
-      document.getElementById('active-count').textContent = data.length;
+      // סינון הזמנות פעילות בלבד מכיוון שכל הכריטיסים מתבססים על הזמנות פעילות בלבד
+      const activeAppointments = data.filter(app => app.status === 'active');
       
-      // ספירת הזמנות להיום
+      // מציב את כמות הזמנות הטיפוח הפעילות בכרטיס
+      document.getElementById('active-count').textContent = activeAppointments.length;
+      
+      // ספירת הזמנות להיום (רק פעילות)
       // מסנן את ההזמנות שתאריך ההזמנה שלהן הוא היום
-      const todayCount = data.filter(app => {
+      const todayCount = activeAppointments.filter(app => {
         // פונקציה שממירה את app.day ל - Date 
         const appDate = parseDate(app.day);
         // רק הזמנות טיפוח שהתאריך שלהן שווה להיום, יעברו את הסינון
@@ -925,8 +1035,8 @@
       // מציב את מספר ההזמנות של היום בכרטיס הסטטיסטיקה המתאים
       document.getElementById('today-count').textContent = todayCount;
       
-      // ספירת הזמנות לשבוע הקרוב
-      const weekCount = data.filter(app => {
+      // ספירת הזמנות לשבוע הקרוב (רק פעילות)
+      const weekCount = activeAppointments.filter(app => {
         // פונקציה שממירה את app.day ל - Date 
         const appDate = parseDate(app.day);
         // כולל רק תאריכים החל מהיום
@@ -937,10 +1047,10 @@
        // מציב את מספר ההזמנות לשבוע הקרוב בכרטיס הסטטיסטיקה המתאים
       document.getElementById('week-count').textContent = weekCount;
       
-      // ספירת כלבים ייחודיים לפי dog_id
+      // ספירת כלבים ייחודיים לפי dog_id (רק מהזמנות פעילות)
       // מאפשר לאגור רק ערכים ייחודיים
       const uniqueDogs = new Set();
-      data.forEach(app => {
+      activeAppointments.forEach(app => {
         if (app.dog_id) {
           uniqueDogs.add(app.dog_id);
         }
@@ -948,10 +1058,18 @@
        // מציב את כמות הכלבים הייחודים בכרטיס הסטטיסטיקה המתאים
        // במידה ויש שני כלבים שונים עם אותו שם, הוא סופר אותם 
       document.getElementById('dogs-count').textContent = uniqueDogs.size;
+      
+      // ספירת הזמנות ששולמו (רק מהזמנות פעילות)
+      const paidCount = activeAppointments.filter(app => app.payment_status === 'paid').length;
+      document.getElementById('paid-count').textContent = paidCount;
+      
+      // ספירת הזמנות שלא שולמו (רק מהזמנות פעילות)
+      const unpaidCount = activeAppointments.filter(app => app.payment_status === 'unpaid').length;
+      document.getElementById('unpaid-count').textContent = unpaidCount;
     }
     
     // פונקציה לסינון וסידור הזמנות
-    // לסנן את רשימת ההזמנות לפי מילת חיפוש, תאריך, סוג טיפוח ו־טווח מחירים, ואז להציג אותן בטבלה
+    // לסנן את רשימת ההזמנות לפי מילת חיפוש, תאריך, סוג טיפוח, טווח מחירים, סטטוס הזמנה וסטטוס תשלום, ואז להציג אותן בטבלה
     function filterAppointments() {
 
       // תיבת החיפוש
@@ -964,6 +1082,10 @@
       const groomingTypeFilter = document.getElementById('grooming-type-filter').value;
       // רשימת סינון לפי טווח המחירים
       const priceFilter = document.getElementById('price-filter').value;
+      // רשימת סינון לפי סטטוס הזמנה
+      const appointmentStatusFilter = document.getElementById('appointment-status-filter').value;
+      // רשימת סינון לפי סטטוס תשלום
+      const paymentStatusFilter = document.getElementById('payment-status-filter').value;
       
 
       // תאריכים מוגדרים מראש להשוואה עם תאריכי ההזמנות
@@ -1074,8 +1196,21 @@
           }
         }
         
+        // סינון לפי סטטוס הזמנה
+        let matchesAppointmentStatus = true;
+        if (appointmentStatusFilter !== 'all') {
+          matchesAppointmentStatus = app.status === appointmentStatusFilter;
+        }
+        
+        // סינון לפי סטטוס תשלום
+        let matchesPaymentStatus = true;
+        if (paymentStatusFilter !== 'all') {
+          matchesPaymentStatus = app.payment_status === paymentStatusFilter;
+        }
+        
         // אם כל הסינונים מצליחים ההזמנה נשמרת
-        return matchesSearch && matchesDate && matchesGroomingType && matchesPrice;
+        return matchesSearch && matchesDate && matchesGroomingType && matchesPrice && 
+               matchesAppointmentStatus && matchesPaymentStatus;
       });
       
       // מיון לפי תאריך ושעה
@@ -1131,7 +1266,7 @@
         // אם אין תוצאות מוסיף שורה אחת בטבלה עם אייקון וטקסט המודיעים שאין הזמנות
         tbody.innerHTML = `
           <tr>
-            <td colspan="10" class="empty-state">
+            <td colspan="13" class="empty-state">
               <i class="fas fa-calendar-times"></i>
               <p>לא נמצאו הזמנות מתאימות</p>
             </td>
@@ -1187,23 +1322,17 @@
         // יצירת שורת הזמנה בטבלה
         /*
          מספר רץ (#)
-
           תאריך
-
           שעה
-
           קוד אישור
-
           שם וטלפון לקוח
-
           שם כלב
-
          סוג טיפוח 
-
           מחיר 
-
+          סטטוס הזמנה 
+          סטטוס תשלום 
+          הזמנת שהייה מקושרת  
           תאריך יצירה
-
           כפתור ביטול + כפתור מידע עם tooltip
         */
         const tr = document.createElement('tr');
@@ -1223,6 +1352,9 @@
           </td>
           <td>${row.grooming_type || 'רגיל'}</td>
           <td>${row.grooming_price ? row.grooming_price + ' ₪' : '-'}</td>
+          <td>${formatAppointmentStatus(row.status)}</td>
+          <td>${formatPaymentStatus(row.payment_status)}</td>
+          <td>${row.connected_reservation_id ? '#' + row.connected_reservation_id : '-'}</td>
           <td>${row.created_at}</td>
           <td class="actions">
             <button class="btn btn-danger" onclick="cancelAppointment('${row.confirmation}', this)">
@@ -1239,7 +1371,10 @@
                 טלפון: ${row.phone || '-'}<br>
                 כלב: ${row.dog_name || '-'}<br>
                 תאריך: ${formattedDate}<br>
-                שעה: ${row.time}
+                שעה: ${row.time}<br>
+                סטטוס הזמנה: ${row.status || '-'}<br>
+                סטטוס תשלום: ${row.payment_status || '-'}<br>
+                הזמנת שהייה מקושרת: ${row.connected_reservation_id ? '#' + row.connected_reservation_id : '-'}
               </span>
             </div>
           </td>
