@@ -55,7 +55,7 @@ $query = "SELECT g.id, g.day, g.time, g.confirmation, g.created_at,
           FROM grooming_appointments g
           LEFT JOIN users u ON g.user_code = u.user_code
           LEFT JOIN dogs d ON g.dog_id = d.dog_id
-          LEFT JOIN reservation r ON g.connected_reservation_id = r.id
+          INNER JOIN reservation r ON g.connected_reservation_id = r.id
           WHERE (
               g.day > CURDATE() 
               OR (g.day = CURDATE() AND g.time > CURTIME())
