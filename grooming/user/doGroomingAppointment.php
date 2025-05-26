@@ -1124,13 +1124,13 @@
       .then(data => {
         // אם ההזמנה הצליחה
         if (data.success) {
-          // מציג למשתמש alert עם מספר האישור והזמנת הפנסיון שקושרה
-          // alert(`ההזמנה נקלטה! מספר אישור: ${data.confirmation}`);
-          let successMessage = `ההזמנה נקלטה! מספר אישור: ${data.confirmation}`;
-          if (data.connected_reservation_id) {
-            successMessage += `\nההזמנה קושרה להזמנת פנסיון מס' ${data.connected_reservation_id}`;
-          }
-          alert(successMessage);
+        //   // מציג למשתמש alert עם מספר האישור והזמנת הפנסיון שקושרה
+        //   // alert(`ההזמנה נקלטה! מספר אישור: ${data.confirmation}`);
+        //   let successMessage = `ההזמנה נקלטה! מספר אישור: ${data.confirmation}`;
+        //   if (data.connected_reservation_id) {
+        //     successMessage += `\nההזמנה קושרה להזמנת פנסיון מס' ${data.connected_reservation_id}`;
+        //   }
+        //   alert(successMessage);
 
           // groomingAppServer כשהזמנת הטיפוח נרשמת בשרת באמצעות 
           // isTaken =1 נוסף לה בטבלת הטיפוח  הסימון 
@@ -1141,6 +1141,9 @@
 
           // מרענן את שעות הטיפוח כדי לחסום את השעה שנבחרה
           updateAvailableTimes();
+          
+          // אחרי שההזמנה נרשמה בהצלחה בשרת, עוברים לעמוד סיכום הזמנת טיפוח
+          window.location.href = `groomingSummary.php`;
 
           // אם ההזמנה לא הצליחה, מציג את הודעת השגיאה שהשרת החזיר
         } else {

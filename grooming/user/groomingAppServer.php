@@ -77,7 +77,20 @@ $stmt = $conn->prepare("INSERT INTO grooming_appointments (day, time, confirmati
 $stmt->bind_param("sssssiii", $data['day'], $data['time'], $confirmation, $user_code, $grooming_type, $grooming_price, $dog_id, $connected_reservation_id);
 
 if ($stmt->execute()) {
+    // שמירת נתוני ההזמנה בסשן לעמוד הסיכום (לא מוחקים את הנתונים המקוריים עדיין)
+    $_SESSION['last_grooming_confirmation'] = $confirmation;
+    $_SESSION['last_grooming_type'] = $grooming_type;
+    $_SESSION['last_grooming_price'] = $grooming_price;
+    $_SESSION['last_appointment_day'] = $data['day'];
+    $_SESSION['last_appointment_time'] = $data['time'];
+    $_SESSION['last_connected_reservation_id'] = $connected_reservation_id;
+    
+    
     // אם ההזמנה הצליחה, מוחקים את המידע מה-SESSION כדי שלא יישמר להזמנה הבאה
+    // למקרה שהמשתמש יעשה כפתור הקודם בדפדפן
+
+    // בעמוד doGrommingAppointment.php בשורה 427
+    // יש שורה שמפנה חזרה לעמוד treatments.php במידה וסוג הטיפוח והמחיר לא מוגדרים
     unset($_SESSION['grooming_type']);
     unset($_SESSION['grooming_price']);
     

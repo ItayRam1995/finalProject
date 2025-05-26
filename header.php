@@ -83,7 +83,7 @@ if ($user_type == 0) {
 $links = $user_type == 1
     ? [
         '../../registration/admin/admin_dashboard_secured.php' => 'דשבורד מנהל',
-        '../../grooming/admin/groomingPanel.php' => 'הזמנות טיפוח',
+        '../../grooming_panel/admin/groomingPanel.php' => 'הזמנות טיפוח',
         '../../inventory_management/admin/inventory_management.php' => 'ניהול מלאי'
     ]
     : [
@@ -91,7 +91,8 @@ $links = $user_type == 1
         '../../registration/user/my_orders.php' => 'הזמנות',
         '../../reservation/user/reservation.php' => 'הזמנה חדשה',
         '../../registration/user/update_profile_secured.php' => 'עדכון פרטים',
-        '../../grooming/user/treatments.php' => 'הזמנת טיפוח',
+        '../../grooming/user/treatments.php' => 'הזמנת טיפוח חדשה',
+        '../../grooming_panel/user/groomingPanelUser.php' => 'הזמנות הטיפוח שלי',
         '../../dog_registration/user/dog_registration.php' => 'רישום כלב חדש',
         '../../dog_registration/user/select_active_dog.php' => 'החלפת כלב פעיל',
     ];
