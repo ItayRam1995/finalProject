@@ -35,15 +35,28 @@ $conn->set_charset("utf8");
 
 // שאילתה לשליפת ההזמנות הפעילות עם פרטי המשתמש ושם הכלב
 // רק הזמנות שהתאריך והשעה שלהן גדולים מהתאריך והשעה הנוכחיים
+// ורק הזמנות טיפוח שהזמנת הפנסיון המקושרת אליהן עדיין קיימת
 $query = "SELECT g.id, g.day, g.time, g.confirmation, g.created_at, 
-                g.grooming_type, g.grooming_price, g.dog_id,
+                g.grooming_type, g.grooming_price, g.dog_id, g.connected_reservation_id,
+                g.status, g.isTaken,
                 u.first_name, u.last_name, u.phone, 
-                d.dog_name
+                d.dog_name,
+                r.id as reservation_id, r.start_date as reservation_start, r.end_date as reservation_end,
+                CASE 
+                    WHEN g.isTaken = 1 THEN 'active'
+                    WHEN g.isTaken = 0 THEN 'cancelled'
+                    ELSE 'unknown'
+                END as appointment_status,
+                CASE 
+                    WHEN g.status = 'paid' THEN 'paid'
+                    WHEN g.status = 'unpaid' THEN 'unpaid'
+                    ELSE 'unpaid'
+                END as payment_status
           FROM grooming_appointments g
           LEFT JOIN users u ON g.user_code = u.user_code
           LEFT JOIN dogs d ON g.dog_id = d.dog_id
-          WHERE g.isTaken = 1 
-          AND (
+          INNER JOIN reservation r ON g.connected_reservation_id = r.id
+          WHERE (
               g.day > CURDATE() 
               OR (g.day = CURDATE() AND g.time > CURTIME())
           )
@@ -60,7 +73,29 @@ if (!$result) {
 // המרת התוצאות למערך של מילונים, כל הזמנה היא מילון
 $appointments = [];
 while ($row = $result->fetch_assoc()) {
-    $appointments[] = $row;
+     // מיפוי הנתונים עם השדות החדשים
+    $appointment = [
+        'id' => $row['id'],
+        'day' => $row['day'],
+        'time' => $row['time'],
+        'confirmation' => $row['confirmation'],
+        'created_at' => $row['created_at'],
+        'grooming_type' => $row['grooming_type'],
+        'grooming_price' => $row['grooming_price'],
+        'dog_id' => $row['dog_id'],
+        'connected_reservation_id' => $row['connected_reservation_id'],
+        'status' => $row['appointment_status'], // סטטוס ההזמנה (פעילה/בוטלה)
+        'payment_status' => $row['payment_status'], // סטטוס התשלום
+        'first_name' => $row['first_name'],
+        'last_name' => $row['last_name'],
+        'phone' => $row['phone'],
+        'dog_name' => $row['dog_name'],
+        'reservation_id' => $row['reservation_id'],
+        'reservation_start' => $row['reservation_start'],
+        'reservation_end' => $row['reservation_end']
+    ];
+    
+    $appointments[] = $appointment;
 }
 
 // סגירת החיבור

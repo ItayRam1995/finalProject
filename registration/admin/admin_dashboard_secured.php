@@ -1,8 +1,6 @@
 <?php include '../../header.php'; ?>
 <?php
 
-
-
 // חיבור למסד נתונים
 $servername = "localhost";
 $username = "itayrm_ItayRam";
@@ -31,7 +29,7 @@ try {
     $totalUsers = $pdo->query("SELECT COUNT(*) as count FROM users")->fetch()['count'] ?? 0;
     // שאילתה כדי לספור את מספר ההזמנות הפעילות במערכת שתאריך הסיום שלהם גדול או שווה לתאריך של היום
     $activeReservations = $pdo->query("
-    SELECT COUNT(*) as count  FROM reservation WHERE status = 'active' AND end_date >= CURDATE()")->fetch()['count'] ?? 0;
+    SELECT COUNT(*) as count FROM reservation WHERE status = 'active' AND end_date >= CURDATE()")->fetch()['count'] ?? 0;
 
      // שאילתה כדי לקבל את זמינות המקומות עבור התאריך של היום
     $availabilityToday = $pdo->query("SELECT available_spots FROM Availability WHERE date = CURDATE()")->fetch();
@@ -52,17 +50,18 @@ try {
     // לשלוף את כל התוצאות שהתקבלו ולשמור אותן במילון
     $activeReservationsList = $activeReservationsQuery->fetchAll(PDO::FETCH_ASSOC);
 
-    // 3. תורי טיפוח השבוע
-        $groomingQuery = $pdo->query("
-        SELECT g.*, d.dog_name, u.first_name, u.last_name 
+    // 3. תורי טיפוח השבוע - רק עם הזמנות פנסיון קיימות
+    $groomingQuery = $pdo->query("
+        SELECT g.*, d.dog_name, u.first_name, u.last_name, r.id as reservation_id
         FROM grooming_appointments g 
         LEFT JOIN dogs d ON g.dog_id = d.dog_id 
         LEFT JOIN users u ON g.user_code = u.user_code 
+        INNER JOIN reservation r ON g.connected_reservation_id = r.id
         WHERE g.day >= CURDATE() 
         AND g.day <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)
         AND g.isTaken = 1 
         ORDER BY g.day ASC, STR_TO_DATE(g.time, '%H:%i') ASC
-        ");
+    ");
 
     // לשלוף את כל התוצאות שהתקבלו ולשמור אותן במילון
     $groomingAppointments = $groomingQuery->fetchAll(PDO::FETCH_ASSOC);
@@ -73,7 +72,6 @@ try {
         FROM inventory 
         WHERE current_stock <= minimum_required 
         ORDER BY (current_stock - minimum_required) ASC
-        
     ");
     // לשלוף את כל התוצאות שהתקבלו ולשמור אותן במילון
     $lowStockItems = $lowStockQuery->fetchAll(PDO::FETCH_ASSOC);
@@ -87,12 +85,15 @@ try {
         AND status = 'paid'
     ")->fetch()['revenue'] ?? 0;
 
+    // הכנסות מטיפוח - רק מהזמנות טיפוח שהזמנת הפנסיון המקושרת קיימת
     $groomingRevenue = $pdo->query("
-        SELECT COALESCE(SUM(grooming_price), 0) as revenue 
-        FROM grooming_appointments 
-        WHERE MONTH(created_at) = MONTH(CURDATE()) 
-        AND YEAR(created_at) = YEAR(CURDATE())
-        AND isTaken = 1
+        SELECT COALESCE(SUM(g.grooming_price), 0) as revenue 
+        FROM grooming_appointments g 
+        INNER JOIN reservation r ON g.connected_reservation_id = r.id
+        WHERE MONTH(g.created_at) = MONTH(CURDATE()) 
+        AND YEAR(g.created_at) = YEAR(CURDATE())
+        AND g.isTaken = 1
+        AND g.status = 'paid'
     ")->fetch()['revenue'] ?? 0;
 
     $monthlyRevenue = $reservationRevenue + $groomingRevenue;
@@ -112,13 +113,14 @@ try {
         ORDER BY date
     ")->fetchAll(PDO::FETCH_ASSOC);
     
-    // 8. סוגי טיפוח לשבוע הקרוב - לפי סוג
+    // 8. סוגי טיפוח לשבוע הקרוב - רק מהזמנות טיפוח שהזמנת הפנסיון המקושרת קיימת
     $groomingTypeQuery = $pdo->query("
-        SELECT grooming_type, COUNT(*) as count
-        FROM grooming_appointments 
-        WHERE day >= CURDATE() AND isTaken = 1
-        AND day <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)  
-        GROUP BY grooming_type
+        SELECT g.grooming_type, COUNT(*) as count
+        FROM grooming_appointments g 
+        INNER JOIN reservation r ON g.connected_reservation_id = r.id
+        WHERE g.day >= CURDATE() AND g.isTaken = 1
+        AND g.day <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)  
+        GROUP BY g.grooming_type
         ORDER BY count DESC
     ");
      // לשלוף את כל התוצאות שהתקבלו ולשמור אותן במילון
@@ -571,6 +573,7 @@ try {
                                 <!-- מחשב את הסכום הכולל של כל התורים -->
                                  <!-- מוציא את כל ערכי count ממערך $groomingTypes -->
                                 סה"כ: <strong style="color: #333;"><?php echo array_sum(array_column($groomingTypes, 'count')); ?> תורים</strong>
+                                <small style="color: #999;">(עם הזמנות פנסיון פעילות)</small>
                             </span>
                         </div>
                     </div>
@@ -588,7 +591,7 @@ try {
             <div class="section">
                 <!-- כותרות -->
                 <div class="section-header">
-                    <h2 class="section-title">הזמנות פעילות</h2>
+                    <h2 class="section-title">הזמנות שהייה בפנסיון פעילות</h2>
                 </div>
                 <!-- אזור התוכן ורישמות ארוכות -->
                 <div class="section-content scrollable-content">
@@ -614,7 +617,8 @@ try {
                                         <div class="item-details">
                                             בעלים: <?php echo htmlspecialchars(($reservation['first_name'] ?? '') . ' ' . ($reservation['last_name'] ?? '')); ?><br>
                                             מ-<?php echo date('d/m/Y', strtotime($reservation['start_date'])); ?> 
-                                            עד <?php echo date('d/m/Y', strtotime($reservation['end_date'])); ?>
+                                            עד <?php echo date('d/m/Y', strtotime($reservation['end_date'])); ?><br>
+                                            <small style="color: #007bff;">הזמנת פנסיון #<?php echo $reservation['id']; ?></small>
                                         </div>
                                     </div>
                                 </div>
@@ -629,12 +633,17 @@ try {
              <!-- כל תור כולל שם כלב, שם בעלים, תאריך, שעה וסוג הטיפוח -->
             <div class="section">
                 <div class="section-header">
-                    <h2 class="section-title">תורי טיפוח השבוע</h2>
+                    <h2 class="section-title">
+                        תורי טיפוח השבוע
+                        <small style="font-size: 0.7em; color: #666; display: block; margin-top: 5px;">
+                            (רק עם הזמנות פנסיון פעילות)
+                        </small>
+                    </h2>
                 </div>
                 <div class="section-content">
                     <!-- אם אין תורי טיפוח השבוע -->
                     <?php if (empty($groomingAppointments)): ?>
-                        <p style="text-align: center; color: #666; padding: 20px;">אין תורי טיפוח השבוע</p>
+                        <p style="text-align: center; color: #666; padding: 20px;">אין תורי טיפוח השבוע עם הזמנות פנסיון פעילות</p>
                     <?php else: ?>
                         <div class="scrollable-content">
                               <!-- עוברת על רשימת ההזמנות הטיפוח לשבוע הקרוב ומציגה כל אחת מהן -->
@@ -655,6 +664,9 @@ try {
                                                 בעלים: <?php echo htmlspecialchars(($appointment['first_name'] ?? '') . ' ' . ($appointment['last_name'] ?? '')); ?><br>
                                                 תאריך: <?php echo date('d/m/Y', strtotime($appointment['day'])); ?> בשעה <?php echo $appointment['time']; ?><br>
                                                 סוג: <?php echo htmlspecialchars($appointment['grooming_type'] ?? 'לא צוין'); ?>
+                                                <?php if (isset($appointment['reservation_id'])): ?>
+                                                    <br><small style="color: #007bff;">קשור להזמנת פנסיון מספר #<?php echo $appointment['reservation_id']; ?></small>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     </div>
@@ -784,24 +796,13 @@ try {
             </div>
 
         </div>
+    </div>
 
     <script>
         // רענון אוטומטי של הדף כל 5 דקות
         setTimeout(function() {
             location.reload();
         }, 300000);
-
-        // // הוספת אפקטים לכפתורים
-        // document.querySelectorAll('button').forEach(button => {
-        //     button.addEventListener('mouseenter', function() {
-        //         this.style.transform = 'scale(1.05)';
-        //         this.style.transition = 'transform 0.2s';
-        //     });
-            
-        //     button.addEventListener('mouseleave', function() {
-        //         this.style.transform = 'scale(1)';
-        //     });
-        // });
     </script>
 </body>
 </html>
