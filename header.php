@@ -90,7 +90,7 @@ $links = $user_type == 1
         '../../registration/user/user_dashboard_secured.php' => 'דשבורד',
         '../../registration/user/my_orders.php' => 'הזמנות',
         '../../reservation/user/reservation.php' => 'הזמנה חדשה',
-        '../../registration/user/update_profile_secured.php' => 'עדכון פרטים',
+        '../../registration/user/update_User_profile.php' => 'עדכון פרטים',
         '../../grooming/user/treatments.php' => 'הזמנת טיפוח חדשה',
         '../../grooming_panel/user/groomingPanelUser.php' => 'הזמנות הטיפוח שלי',
         '../../dog_registration/user/dog_registration.php' => 'רישום כלב חדש',
