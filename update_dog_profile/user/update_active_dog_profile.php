@@ -1205,81 +1205,61 @@
                     data: formData,
                     contentType: false,
                     processData: false,
+                    dataType: 'json', // הוספה חשובה - זה אומר לג'יקווירי לפרש את התשובה כ-JSON
                     
                     success: function(response) {
                         // מדפיס את התגובה של השרת בקונסול
-                        console.log("תשובה התקבלה:", response); // לוג לדיבוג
+                        console.log("תשובה התקבלה:", response); 
                         
-                        try {
-                            // בדיקה אם התשובה מכילה שגיאת SQL
-                            if (response.includes("SQL syntax") || response.includes("error in your SQL")) {
-                                // הצגת הודעה ידידותית למשתמש במקום שגיאת SQL
-                                showStatusMessage('אירעה שגיאה בעדכון הנתונים. אנא בדוק את השדות שהזנת ונסה שנית.', 'error');
-                                return;
-                            }
-                            // ממשיך לנסות לנתח את התשובה שהתקבלה מהשרת כ־ JSON
-                            const result = JSON.parse(response);
-                            if (result.status === 'success') {
-                                showStatusMessage('פרטי הכלב עודכנו בהצלחה! מעביר אותך לדשבורד...', 'success');
-                                
-                                // הפניה לדשבורד המשתמש לאחר 3 שניות
-                                setTimeout(function() {
-                                    window.location.href = '../../registration/user/user_dashboard_secured.php';
-                                }, 3000);
-
-                                // אם הוא לא הצליח לקרוא את קובץ ה JSON
-                            } else {
-                                // הודעת שגיאה ידידותית למשתמש
-                                let errorMsg = 'אירעה שגיאה בעדכון הנתונים: ';
-                                
-                                // אם התקבל שדה ספציפי שגוי
-                                if (result.field) {
-                                    const fieldNames = {
-                                        'dog_name': 'שם הכלב',
-                                        'gender': 'מין',
-                                        'chip_number': 'מספר שבב',
-                                        'breed': 'גזע',
-                                        'age': 'גיל',
-                                        'weight': 'משקל',
-                                        'color': 'צבע',
-                                        // לא לשנות כאן את ה dog_image
-                                        'dog_image': 'תמונת הכלב',
-                                        'dog_personality': 'אופי הכלב',
-                                        'health_notes': 'הערות בריאותיות',
-                                        'food_type': 'סוג מזון',
-                                        'daily_food_amount': 'כמות אוכל יומית',
-                                        'veterinarian_name': 'שם הווטרינר',
-                                        'veterinarian_phone': 'מספר טלפון של הווטרינר',
-                                        'general_notes': 'הערות כלליות'
-                                    };
-                                    // אם יש מפתח במילון שמתאים לשם שהשרת החזיר אז השתמש בו, אחרת (למקרה שאין תרגום במילון) השתמש בשם המקורי כמו שהוא
-                                    const fieldName = fieldNames[result.field] || result.field;
-                                    errorMsg += 'שדה "' + fieldName + '" אינו תקין. ';
-                                    
-                                    // הדגשת השדה השגוי בטופס
-                                    // מחליף קו תחתון בקו מקשר כדי להתאים לשמות המזהים בדף
-                                    $('#' + result.field.replace('_', '-')).addClass('input-error');
-                                } 
-                                
-                                // הוספת הודעת השגיאה הספציפית אם קיימת
-                                if (result.message) {
-                                    errorMsg += result.message;
-                                }
-                                
-                                showStatusMessage(errorMsg, 'error');
-                            }
-                            // אם התגובה מהשרת אינה JSON תקין
-                        } catch(e) {
-                            console.error("שגיאת JSON:", e, "תשובה מקורית:", response);
+                        if (response.status === 'success') {
+                            showStatusMessage('פרטי הכלב עודכנו בהצלחה! מעביר אותך לדשבורד...', 'success');
                             
-                            // הודעות שגיאה ידידותיות למשתמש במקום שגיאות טכניות
-                            if (response.includes("Warning") || response.includes("Fatal error") || response.includes("Notice")) {
-                                showStatusMessage('אירעה שגיאה בעדכון הנתונים. אנא נסה שנית מאוחר יותר.', 'error');
-                            } else {
-                                showStatusMessage('אירעה שגיאה בעדכון הנתונים. אנא ודא שכל השדות תקינים ונסה שנית.', 'error');
+                            // הפניה לדשבורד המשתמש לאחר 3 שניות
+                            setTimeout(function() {
+                                window.location.href = '../../registration/user/user_dashboard_secured.php';
+                            }, 3000);
+                            
+                        } else {
+                            // הודעת שגיאה ידידותית למשתמש
+                            let errorMsg = 'אירעה שגיאה בעדכון הנתונים: ';
+                            
+                            // אם התקבל שדה ספציפי שגוי
+                            if (response.field) {
+                                const fieldNames = {
+                                    'dog_name': 'שם הכלב',
+                                    'gender': 'מין',
+                                    'chip_number': 'מספר שבב',
+                                    'breed': 'גזע',
+                                    'age': 'גיל',
+                                    'weight': 'משקל',
+                                    'color': 'צבע',
+                                    'dog_image': 'תמונת הכלב',
+                                    'dog_personality': 'אופי הכלב',
+                                    'health_notes': 'הערות בריאותיות',
+                                    'food_type': 'סוג מזון',
+                                    'daily_food_amount': 'כמות אוכל יומית',
+                                    'veterinarian_name': 'שם הווטרינר',
+                                    'veterinarian_phone': 'מספר טלפון של הווטרינר',
+                                    'general_notes': 'הערות כלליות'
+                                };
+                                // אם יש מפתח במילון שמתאים לשם שהשרת החזיר אז השתמש בו, אחרת (למקרה שאין תרגום במילון) השתמש בשם המקורי כמו שהוא
+                                const fieldName = fieldNames[response.field] || response.field;
+                                errorMsg += 'שדה "' + fieldName + '" אינו תקין. ';
+                                
+                                // הדגשת השדה השגוי בטופס
+                                // מחליף קו תחתון בקו מקשר כדי להתאים לשמות המזהים בדף
+                                $('#' + response.field.replace('_', '-')).addClass('input-error');
+                            } 
+                            
+                            // הוספת הודעת השגיאה הספציפית אם קיימת
+                            if (response.message) {
+                                errorMsg += response.message;
                             }
+                            
+                            showStatusMessage(errorMsg, 'error');
                         }
                     },
+                    
                     // לא הצליח בכלל לתקשר עם השרת
                     error: function(xhr, status, error) {
                         console.error("שגיאת AJAX:", status, error, xhr.responseText);
