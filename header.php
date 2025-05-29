@@ -94,6 +94,7 @@ $links = $user_type == 1
         '../../grooming/user/treatments.php' => 'הזמנת טיפוח חדשה',
         '../../grooming_panel/user/groomingPanelUser.php' => 'הזמנות הטיפוח שלי',
         '../../dog_registration/user/dog_registration.php' => 'רישום כלב חדש',
+         '../../update_dog_profile/user/update_active_dog_profile.php' => 'עדכון פרטי כלב פעיל',
         '../../dog_registration/user/select_active_dog.php' => 'החלפת כלב פעיל',
     ];
 
