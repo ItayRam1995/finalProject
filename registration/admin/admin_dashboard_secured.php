@@ -29,7 +29,7 @@ try {
     $totalUsers = $pdo->query("SELECT COUNT(*) as count FROM users")->fetch()['count'] ?? 0;
     // שאילתה כדי לספור את מספר ההזמנות הפעילות במערכת שתאריך הסיום שלהם גדול או שווה לתאריך של היום
     $activeReservations = $pdo->query("
-    SELECT COUNT(*) as count FROM reservation WHERE status = 'active' AND end_date >= CURDATE()")->fetch()['count'] ?? 0;
+    SELECT COUNT(*) as count FROM reservation WHERE status != 'deleted' AND end_date >= CURDATE()")->fetch()['count'] ?? 0;
 
      // שאילתה כדי לקבל את זמינות המקומות עבור התאריך של היום
     $availabilityToday = $pdo->query("SELECT available_spots FROM Availability WHERE date = CURDATE()")->fetch();
@@ -43,7 +43,7 @@ try {
         FROM reservation r 
         LEFT JOIN dogs d ON r.dog_id = d.dog_id 
         LEFT JOIN users u ON r.user_code = u.user_code 
-        WHERE r.status = 'active' AND r.end_date >= CURDATE()
+        WHERE r.status != 'deleted' AND r.end_date >= CURDATE()
         ORDER BY r.start_date ASC 
     ");
 
@@ -60,6 +60,7 @@ try {
         WHERE g.day >= CURDATE() 
         AND g.day <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)
         AND g.isTaken = 1 
+        AND r.status != 'deleted'
         ORDER BY g.day ASC, STR_TO_DATE(g.time, '%H:%i') ASC
     ");
 
@@ -94,6 +95,7 @@ try {
         AND YEAR(g.created_at) = YEAR(CURDATE())
         AND g.isTaken = 1
         AND g.status = 'paid'
+        AND r.status != 'deleted'
     ")->fetch()['revenue'] ?? 0;
 
     $monthlyRevenue = $reservationRevenue + $groomingRevenue;
@@ -118,7 +120,7 @@ try {
         SELECT g.grooming_type, COUNT(*) as count
         FROM grooming_appointments g 
         INNER JOIN reservation r ON g.connected_reservation_id = r.id
-        WHERE g.day >= CURDATE() AND g.isTaken = 1
+        WHERE g.day >= CURDATE() AND g.isTaken = 1 AND r.status != 'deleted'
         AND g.day <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)  
         GROUP BY g.grooming_type
         ORDER BY count DESC
