@@ -88,6 +88,7 @@ $links = $user_type == 1
     ]
     : [
         '../../registration/user/user_dashboard_secured.php' => 'דשבורד',
+        '../../googleCalendar/user/calendar.php' => 'google Calendar',
         '../../registration/user/my_orders.php' => 'הזמנות',
         '../../reservation/user/reservation.php' => 'הזמנה חדשה',
         '../../registration/user/update_User_profile.php' => 'עדכון פרטים',
