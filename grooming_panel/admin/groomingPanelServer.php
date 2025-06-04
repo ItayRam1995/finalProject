@@ -60,6 +60,7 @@ $query = "SELECT g.id, g.day, g.time, g.confirmation, g.created_at,
               g.day > CURDATE() 
               OR (g.day = CURDATE() AND g.time > CURTIME())
           )
+          AND r.status != 'deleted'
           ORDER BY g.day, g.time";
 
 // הרצת השאילתה

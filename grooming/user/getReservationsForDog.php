@@ -33,7 +33,7 @@ $today = date('Y-m-d'); // התאריך של היום
 // שליפת רק הזמנות פעילות - כאלה שתאריך הסיום שלהן גדול או שווה לתאריך של היום
 $stmt = $conn->prepare("SELECT id, start_date, end_date, created_at 
                        FROM reservation 
-                       WHERE dog_id = ? AND user_code = ? AND end_date >= ? 
+                       WHERE dog_id = ? AND user_code = ? AND end_date >= ? AND status != 'deleted'
                        ORDER BY start_date ASC");
 $stmt->bind_param("iss", $dog_id, $user_code, $today);
 $stmt->execute();
