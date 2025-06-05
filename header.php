@@ -87,16 +87,16 @@ $links = $user_type == 1
         '../../inventory_management/admin/inventory_management.php' => 'ניהול מלאי'
     ]
     : [
-        '../../registration/user/user_dashboard_secured.php' => 'דשבורד',
+        '../../registration/user/user_dashboard_secured.php' => 'האזור האישי (פעולות נוספות)',
         '../../googleCalendar/user/calendar.php' => 'google Calendar',
-        '../../registration/user/my_orders.php' => 'הזמנות',
-        '../../reservation/user/reservation.php' => 'הזמנה חדשה',
-        '../../registration/user/update_User_profile.php' => 'עדכון פרטים',
-        '../../grooming/user/treatments.php' => 'הזמנת טיפוח חדשה',
+        '../../reservation/user/reservation.php' => ' בצע הזמנת פנסיון חדשה',
+        '../../registration/user/my_orders.php' => 'הזמנות הפנסיון שלי',
+        // '../../registration/user/update_User_profile.php' => 'עדכון פרטים',
+        '../../grooming/user/treatments.php' => 'בצע הזמנת טיפוח חדשה',
         '../../grooming_panel/user/groomingPanelUser.php' => 'הזמנות הטיפוח שלי',
-        '../../dog_registration/user/dog_registration.php' => 'רישום כלב חדש',
-         '../../update_dog_profile/user/update_active_dog_profile.php' => 'עדכון פרטי כלב פעיל',
-        '../../dog_registration/user/select_active_dog.php' => 'החלפת כלב פעיל',
+        // '../../dog_registration/user/dog_registration.php' => 'רישום כלב חדש',
+        // '../../update_dog_profile/user/update_active_dog_profile.php' => 'עדכון פרטי כלב פעיל',
+        // '../../dog_registration/user/select_active_dog.php' => 'החלפת כלב פעיל',
     ];
 
 // קביעת צבעים לפי סוג משתמש

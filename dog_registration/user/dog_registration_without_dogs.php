@@ -839,7 +839,7 @@ $conn->close();
                             // ממשיך לנסות לנתח את התשובה שהתקבלה מהשרת כ־ JSON
                             const result = JSON.parse(response);
                             if (result.status === 'success') {
-                                showStatusMessage('הכלב נרשם בהצלחה! מעביר אותך לדשבורד או לבחירת הכלב...', 'success');
+                                showStatusMessage('הכלב נרשם בהצלחה! מעביר אותך עכשיו לאזור האישי שלך  ...', 'success');
                                 
                                 // הפניה לדשבורד המשתמש לאחר 3 שניות
                                 setTimeout(function() {

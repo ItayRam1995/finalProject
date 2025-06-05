@@ -542,7 +542,7 @@
             background-color: #e2e6ea;
         }
         
-        /* כפתור חזרה לדשבורד */
+        /* כפתור חזרה לאזור האישי  */
         .btn-back {
             /* צבע רקע אפור כהה */
             background-color: #6c757d;
@@ -664,7 +664,7 @@
     <div class="container">
         <!-- כפתור חזרה -->
         <a href="../../registration/user/user_dashboard_secured.php" class="btn btn-back">
-            <i class="fas fa-arrow-right"></i> חזרה לדשבורד
+            <i class="fas fa-arrow-right"></i> חזרה לאזור האישי
         </a>
         
         <header>
@@ -1212,9 +1212,9 @@
                         console.log("תשובה התקבלה:", response); 
                         
                         if (response.status === 'success') {
-                            showStatusMessage('פרטי הכלב עודכנו בהצלחה! מעביר אותך לדשבורד...', 'success');
+                            showStatusMessage('פרטי הכלב עודכנו בהצלחה! מעביר אותך לאזור האישי...', 'success');
                             
-                            // הפניה לדשבורד המשתמש לאחר 3 שניות
+                            // הפניה לאזור האישי לאחר 3 שניות
                             setTimeout(function() {
                                 window.location.href = '../../registration/user/user_dashboard_secured.php';
                             }, 3000);

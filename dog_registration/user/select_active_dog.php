@@ -58,8 +58,8 @@ if (isset($_POST['selected_dog_id'])) {
         $_SESSION['active_dog_id'] = $check_row['dog_id'];
         $_SESSION['active_dog_name'] = $check_row['dog_name'];
         
-        // עדכון הודעת הצלחה והפניה לדשבורד
-        $success_message = "הכלב '" . htmlspecialchars($check_row['dog_name']) . "' נבחר בהצלחה!";
+        // עדכון הודעת הצלחה והפניה לאזור האישי
+        $success_message = "הכלב '" . htmlspecialchars($check_row['dog_name']) . "' נבחר בהצלחה! מעביר אותך חזרה לאזור האישי ";
         
         // // אפשר להפנות לדשבורד או להישאר באותו עמוד
         // echo "<script>window.location.href = '../../registration/user/user_dashboard_secured.php';</script>";

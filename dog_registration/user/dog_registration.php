@@ -347,6 +347,34 @@
         .btn-reset:hover {
             background-color: #e2e6ea;
         }
+
+        /* כפתור חזרה לאזור האישי חזרה  */
+        .btn-back {
+            /* צבע רקע אפור כהה */
+            background-color: #6c757d;
+            /* צבע טקסט לבן  */
+            color: white;
+            /* מבטל קו תחתון שיש לקישורים */
+            text-decoration: none;
+            /* מציג את האלמנט בשורה אחת עם אייקון וטקסט */
+            display: inline-flex;
+            /* ממרכז את האייקון והטקסט לגובה אחד */
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .btn-back:hover {
+            /* צבע רקע אפור כהה יותר */
+            background-color: #5a6268;
+            color: white;
+            /* שלא יופיע קו תחתון */
+            text-decoration: none;
+        }
+        
+        /* עיצוב לאייקון בתוך כפתור החזרה */
+        .btn-back i {
+            margin-left: 8px;
+        }
         
         @media (max-width: 768px) {
             .form-group {
@@ -363,6 +391,12 @@
 </head>
 <body>
     <div class="container">
+
+        <!-- כפתור חזרה -->
+        <a href="../../registration/user/user_dashboard_secured.php" class="btn btn-back">
+            <i class="fas fa-arrow-right"></i> חזרה לאזור האישי
+        </a>
+        
         <header>
             <h1>רישום כלב חדש</h1>
             <p>כדי להתחיל להשתמש באתר, אנא רשום את הכלב הראשון שלך</p>
@@ -773,9 +807,9 @@
                             // ממשיך לנסות לנתח את התשובה שהתקבלה מהשרת כ־ JSON
                             const result = JSON.parse(response);
                             if (result.status === 'success') {
-                                showStatusMessage('הכלב נרשם בהצלחה! מעביר אותך לדשבורד או לבחירת הכלב...', 'success');
+                                showStatusMessage('הכלב נרשם בהצלחה! מעביר אותך חזרה לאזור האישי...', 'success');
                                 
-                                // הפניה לדשבורד המשתמש לאחר 3 שניות
+                                // הפניה לאזור האישי לאחר 3 שניות
                                 setTimeout(function() {
                                     window.location.href = '../../registration/user/user_dashboard_secured.php';
                                 }, 3000);
