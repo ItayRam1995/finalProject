@@ -270,11 +270,65 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     .loading input {
       opacity: 0.6;
     }
+
+    /* כפתור כללי בדף */
+    .btn {
+        /* מאפשר להציג אותו בשורה אחת עם טקסט אם צריך, אך גם לתפקד כמו בלוק */
+        display: inline-block;
+        /* כחול כהה */
+        background-color: var(--primary-color);
+        /* טקסט לבן */
+        color: white;
+        padding: 12px 24px;
+        /* מסיר גבול חיצוני ברירת-מחדל של הדפדפן */
+        border: none;
+        border-radius: 6px;
+        /* משנה את סמן העכבר ליד בעת מעבר מעל הכפתור */
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        /* מיישר את תוכן הכפתור */
+        text-align: center;
+        transition: all 0.3s;
+    }
+    /* כפתור חזרה לאזור האישי  */
+    .btn-back {
+        /* צבע רקע אפור כהה */
+        background-color: #6c757d;
+        /* צבע טקסט לבן  */
+        color: white;
+        /* מבטל קו תחתון שיש לקישורים */
+        text-decoration: none;
+        /* מציג את האלמנט בשורה אחת עם אייקון וטקסט */
+        display: inline-flex;
+        /* ממרכז את האייקון והטקסט לגובה אחד */
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    
+    .btn-back:hover {
+        /* צבע רקע אפור כהה יותר */
+        background-color: #5a6268;
+        color: white;
+        /* שלא יופיע קו תחתון */
+        text-decoration: none;
+    }
+    
+    /* עיצוב לאייקון בתוך כפתור החזרה */
+    .btn-back i {
+        margin-left: 8px;
+    }
   </style>
 </head>
 <body>
 
   <form id="updateForm" action="update_User_profile.php" method="post" novalidate>
+
+        <!-- כפתור חזרה -->
+        <a href="../../registration/user/user_dashboard_secured.php" class="btn btn-back">
+            <i class="fas fa-arrow-right"></i> חזרה לאזור האישי
+        </a>
+
     <h2>עדכון פרטים אישיים</h2>
     
     <?php if (!empty($message)): ?>
