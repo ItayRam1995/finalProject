@@ -57,9 +57,9 @@ if ($user_type == 0) {
                 exit;
             }
         } else {
-            // קבלת פרטי הכלב הפעיל
+            // קבלת פרטי הכלב הפעיל כולל התמונה
             $active_dog_id = $_SESSION['active_dog_id'];
-            $get_dog_query = "SELECT dog_name FROM dogs WHERE dog_id = ? AND user_code = ?";
+            $get_dog_query = "SELECT dog_name, image_url FROM dogs WHERE dog_id = ? AND user_code = ?";
             $stmt = $conn->prepare($get_dog_query);
             $stmt->bind_param("is", $active_dog_id, $user_code);
             $stmt->execute();
@@ -67,6 +67,7 @@ if ($user_type == 0) {
             
             if ($row = $result->fetch_assoc()) {
                 $active_dog_name = htmlspecialchars($row['dog_name']);
+                $active_dog_image = '../../dog_registration/user/'. $row['image_url']; // נתיב לתמונת הכלב
             } else {
                 // אם הכלב לא נמצא, הסר אותו מהסשן ונתב מחדש
                 unset($_SESSION['active_dog_id']);
@@ -133,171 +134,218 @@ $headerHeight = 140; // גובה ממוצע בפיקסלים
         margin-top: 0 !important;
     }
     
-    /*  הכותרת הראשית - fixed בחזרה לראש הדף */
+    /*  הכותרת הראשית - הכותרת נשארת במקום גם בגלילה*/
     .doggy-header-container {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        background: <?= $headerBgColor ?> !important;
-        color: white !important;
+        position: fixed !important; /* קיבוע הכותרת בחלק העליון */
+        top: 0 !important; /* מיקום בחלק העליון של המסך */
+        left: 0 !important; /* מיקום מצד שמאל */
+        width: 100% !important; /* רוחב מלא של המסך */
+        background: <?= $headerBgColor ?> !important; /* צבע רקע דינמי לפי סוג משתמש */
+        color: white !important; /* צבע טקסט לבן לניגודיות */
         font-family: 'Assistant', 'Rubik', Arial, sans-serif !important;
         font-size: 16px !important;
-        z-index: 1000 !important;
+        z-index: 1000 !important;  /* להבטחת תצוגה מעל כל התוכן */
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
-        direction: rtl !important;
+        direction: rtl !important; /* כיוון עברית מימין לשמאל */
         display: flex !important;
-        flex-direction: column !important;
+        flex-direction: column !important; /* סידור אלמנטים בעמודה */
     }
     
     /* סרגל עליון עם לוגו ופרטי משתמש */
+    /* מכיל את הלוגו, פרטי המשתמש וכפתור התנתקות
+    רקע כהה יותר להבחנה מהתפריט */
     .doggy-header-top {
         display: flex !important;
-        justify-content: space-between !important;
-        align-items: flex-start !important; 
+        justify-content: space-between !important; /* פיזור אלמנטים בין הקצוות */
+        align-items: flex-start !important; /* יישור לחלק העליון */
         padding: 10px 20px !important;
-        background-color: rgba(0, 0, 0, 0.1) !important;
-        position: relative !important; 
+        background-color: rgba(0, 0, 0, 0.1) !important; /*רקע כהה יותר*/
+        position: relative !important; /* למיקום מוחלט של תגית סוג המשתמש */
     }
     
     /* לוגו האתר */
+    /* כולל אייקון כלב וטקסט
+    קישור לאזור האישי של המשתמש */
     .doggy-header-logo {
-        font-weight: bold !important;
-        font-size: 20px !important;
-        color: white !important;
-        text-decoration: none !important;
-        display: flex !important;
-        align-items: center !important;
+        font-weight: bold !important; /* טקסט מודגש */
+        font-size: 20px !important; /* גודל פונט בולט */
+        color: white !important; /* צבע לבן */
+        text-decoration: none !important; /* ביטול קו תחתון */
+        display: flex !important; 
+        align-items: center !important; /* יישור אנכי למרכז */
         margin-top: 5px !important; /* הוספת מרווח קטן מלמעלה ליישור טוב יותר */
     }
     
+    /* אייקון הכלב בלוגו */
     .doggy-header-logo-icon {
-        margin-left: 8px !important;
+        margin-left: 8px !important; /* מרווח מהטקסט */
         font-size: 24px !important;
     }
     
     /* מידע על המשתמש*/
+    /* מכיל שם המשתמש, פרטי כלב פעיל והתנתקות */
     .doggy-header-user-info {
         display: flex !important;
-        flex-direction: column !important; 
+        flex-direction: column !important; /* סידור בעמודה */
         align-items: flex-end !important; /* יישור לימין */
-        gap: 8px !important;
+        gap: 8px !important; /* מרווח בין אלמנטים */
         padding-top: 15px !important; /* מרווח מלמעלה כדי לפנות מקום לתגית סוג המשתמש */
     }
     
     /* שורה עם השם הפרטי והתנתקות */
+    /* מכילה את השם הפרטי, כלב פעיל וכפתור התנתקות */
     .doggy-header-user-controls {
         display: flex !important;
-        align-items: center !important;
-        gap: 15px !important;
+        align-items: center !important; /* יישור אנכי למרכז */
+        gap: 15px !important; /* מרווח אחיד בין אלמנטים */
     }
     
+    /* הודעת ברוכים הבאים */
+    /* מציגה את השם הפרטי של המשתמש
+    עיצוב בולט עם רקע לבן וטקסט כהה */
     .doggy-header-welcome {
-        background: white !important;
-        color: <?= $headerBgColor ?> !important;
+        background: white !important; /* רקע לבן */
+        color: <?= $headerBgColor ?> !important; /* טקסט בצבע הכותרת */
         padding: 6px 12px !important;
-        border-radius: 5px !important;
-        font-weight: bold !important;
+        border-radius: 5px !important; /* פינות מעוגלות */
+        font-weight: bold !important; /* טקסט מודגש */
         display: flex !important;
-        align-items: center !important;
+        align-items: center !important; /* יישור אנכי למרכז */
     }
     
+    /* אייקון היד בהודעת ברוכים הבאים */
     .doggy-header-welcome-icon {
-        margin-left: 5px !important;
+        margin-left: 5px !important; /* מרווח מהטקסט */
     }
     
     /* סגנון לאזור הכלב הפעיל */
+    /* מציג תמונה והשם של הכלב הפעיל
+       רקע שקוף עם מסגרת */
     .doggy-header-active-dog {
-        background: rgba(255, 255, 255, 0.15) !important;
-        color: white !important;
-        padding: 6px 12px !important;
-        border-radius: 5px !important;
-        font-weight: bold !important;
+        background: rgba(255, 255, 255, 0.15) !important; /* רקע שקוף */
+        color: white !important; /* טקסט לבן */
+        padding: 6px 12px !important; /* ריווח פנימי */
+        border-radius: 5px !important; /* פינות מעוגלות */
+        font-weight: bold !important; /* טקסט מודגש */
         display: flex !important;
-        align-items: center !important;
-        margin-right: 10px !important;
+        align-items: center !important; /* יישור אנכי למרכז */
+        margin-right: 10px !important; /* מרווח מימין */
+        gap: 8px !important; /* מרווח בין התמונה לטקסט */
     }
     
+    /* תמונת הכלב הפעיל */
+    .doggy-header-dog-image {
+        width: 35px !important; /* רוחב קבוע */
+        height: 35px !important; /* גובה קבוע */
+        border-radius: 50% !important; /* עיגול התמונה */
+        object-fit: cover !important; /* שמירה על פרופורציות התמונה */
+        border: 2px solid rgba(255, 255, 255, 0.3) !important; /* מסגרת לבנה */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important; /* צל */
+    }
+    
+    /* אייקון כלב כברירת מחדל */
+    /* מוצג כאשר אין תמונה או שהיא לא נטענת */
     .doggy-header-dog-icon {
-        margin-left: 5px !important;
+        margin-left: 5px !important; /* מרווח מהטקסט */
+        font-size: 20px !important; /* גודל אייקון */
     }
     
-    .doggy-header-logout {
-        color: white !important;
-        text-decoration: none !important;
-        padding: 6px 12px !important;
-        border-radius: 5px !important;
-        background-color: rgba(255, 255, 255, 0.1) !important;
-        transition: background-color 0.3s ease !important;
+    /* מיכל לטקסט הכלב */
+    /* מכיל את הטקסט עם שם הכלב הפעיל */
+    .doggy-header-dog-text {
         display: flex !important;
-        align-items: center !important;
+        align-items: center !important; /* יישור אנכי למרכז */
+        gap: 5px !important; /* מרווח קטן */
+    }
+    
+    /* כפתור התנתקות */
+    .doggy-header-logout {
+        color: white !important; /* טקסט לבן */
+        text-decoration: none !important; /* ביטול קו תחתון */
+        padding: 6px 12px !important; /* ריווח פנימי */
+        border-radius: 5px !important; /* פינות מעוגלות */
+        background-color: rgba(255, 255, 255, 0.1) !important; /* רקע שקוף */
+        transition: background-color 0.3s ease !important; /* אפקט מעבר חלק */
+        display: flex !important;
+        align-items: center !important; /* יישור אנכי למרכז */
     }
     
     .doggy-header-logout:hover {
-        background-color: rgba(255, 255, 255, 0.2) !important;
+        background-color: rgba(255, 255, 255, 0.2) !important; /* רקע בהיר יותר */
     }
     
+    /* אייקון דלת בכפתור התנתקות */
     .doggy-header-logout-icon {
-        margin-right: 5px !important;
+        margin-right: 5px !important; /* מרווח מהטקסט */
     }
     
     /* תפריט הניווט */
+    /* מכיל את כל הקישורים הראשיים של המערכת */
     .doggy-header-nav {
-        padding: 10px 20px !important;
+        padding: 10px 20px !important; /* ריווח פנימי */
         display: flex !important;
-        justify-content: center !important;
+        justify-content: center !important; /* יישור למרכז */
     }
     
+    /* מיכל קישורי הניווט */
+    /* מסדר את הקישורים בשורות עם מעבר אוטומטי */
     .doggy-header-links {
         display: flex !important;
-        gap: 5px !important;
-        flex-wrap: wrap !important;
-        justify-content: center !important;
-        max-width: 1200px !important;
+        gap: 5px !important; /* מרווח קטן בין קישורים */
+        flex-wrap: wrap !important; /* מעבר לשורה חדשה כשצריך */
+        justify-content: center !important; /* יישור למרכז */
+        max-width: 1200px !important; /* רוחב מקסימלי */
     }
     
+    /* כל קישור בתפריט הניווט */
     .doggy-header-link {
-        color: white !important;
-        text-decoration: none !important;
-        padding: 8px 15px !important;
-        border-radius: 5px !important;
-        transition: background-color 0.3s ease !important;
-        white-space: nowrap !important;
+        color: white !important; /* טקסט לבן */
+        text-decoration: none !important; /* ביטול קו תחתון */
+        padding: 8px 15px !important; /* ריווח פנימי  */
+        border-radius: 5px !important; /* פינות מעוגלות */
+        transition: all 0.3s ease !important; /* אפקט מעבר חלק */
+        white-space: nowrap !important; /* מניעת שבירת טקסט */
         font-weight: 500 !important;
     }
     
     .doggy-header-link:hover {
-        background-color: <?= $headerAccentColor ?> !important;
+        background-color: <?= $headerAccentColor ?> !important; /* צבע רקע דינמי */
     }
     
     /* אינדיקציה לסוג משתמש */
+    /* תגית קטנה המציינת אם המשתמש הוא מנהל או משתמש רגיל
+    ממוקמת בפינה השמאלית העליונה */
     .doggy-header-user-type {
-        position: absolute !important;
-        top: 0 !important;
-        left: 0 !important;
-        background-color: <?= $headerAccentColor ?> !important;
-        color: white !important;
-        font-size: 11px !important;
-        padding: 2px 8px !important;
-        border-bottom-right-radius: 5px !important;
+        position: absolute !important; /* מיקום מוחלט */
+        top: 0 !important; /* צמוד לחלק העליון */
+        left: 0 !important; /* צמוד לצד שמאל */
+        background-color: <?= $headerAccentColor ?> !important; /* צבע דינמי */
+        color: white !important; /* טקסט לבן */
+        font-size: 11px !important; /* פונט קטן */
+        padding: 2px 8px !important; /* ריווח פנימי קטן */
+        border-bottom-right-radius: 5px !important; /* עיגול רק בפינה הימנית התחתונה */
     }
     
     /* התאמה למובייל */
     @media (max-width: 768px) {
+
+        /* הגדלת הריווח העליון למסכים קטנים */
         body {
-            padding-top: 500px !important; /* הגדלת הריווח למסכים קטנים */
+            padding-top: 500px !important; /* הגדלת הריווח למסכים קטנים בגלל פריסה אנכית */
         }
         
+        /* סרגל עליון במובייל */
         .doggy-header-top {
-            flex-direction: column !important;
-            align-items: stretch !important;
-            gap: 10px !important;
-            padding: 10px !important;
+            flex-direction: column !important; /* סידור בעמודה במקום בשורה */
+            align-items: stretch !important; /* מתיחה לרוחב מלא */
+            gap: 10px !important; /* מרווח גדול יותר בין אלמנטים */
+            padding: 15px 10px !important; /* ריווח מותאם למובייל */
         }
         
+         /* מידע משתמש במובייל */
         .doggy-header-user-info {
-            align-items: stretch !important;
-            padding-top: 20px !important; /* הגדלת המרווח במובייל */
+            align-items: stretch !important; /* מתיחה לרוחב מלא */
+            padding-top: 20px !important; /* מרווח גדול יותר מלמעלה */
         }
         
         .doggy-header-user-controls {
@@ -305,31 +353,41 @@ $headerHeight = 140; // גובה ממוצע בפיקסלים
             flex-wrap: wrap !important;
         }
         
+        /* קישורי ניווט במובייל */
         .doggy-header-links {
-            flex-direction: column !important;
-            width: 100% !important;
-            gap: 5px !important;
+            flex-direction: column !important; /* סידור בעמודה */
+            width: 100% !important; /* רוחב מלא */
+            gap: 5px !important; /* מרווח גדול יותר בין קישורים */
         }
         
+        /* קישור יחיד במובייל */
         .doggy-header-link {
-            text-align: center !important;
+            text-align: center !important; /* יישור טקסט למרכז */
             padding: 10px !important;
         }
         
+        /* כלב פעיל במובייל */
         .doggy-header-active-dog {
-            margin-top: 5px !important;
-            margin-right: 0 !important;
+            margin-top: 5px !important; /* מרווח עליון */
+            margin-right: 0 !important; /* ביטול מרווח ימני */
+        }
+        
+        /* הקטנת התמונה במובייל */
+        .doggy-header-dog-image {
+            width: 30px !important;
+            height: 30px !important;
         }
     }
     
     /* סקריפט JavaScript להתאמת padding-top בזמן ריענון הדף */
     .js-header-height-script {
-        display: none !important;
+        display: none !important; /* מחלקה מוסתרת לסקריפט */
     }
 </style>
 
 <div class="doggy-header-container">
     <!-- סרגל עליון -->
+    <!-- מכיל לוגו, פרטי משתמש וכפתור התנתקות -->
     <div class="doggy-header-top">
         <!-- אינדיקציה לסוג משתמש  -->
         <div class="doggy-header-user-type">
@@ -347,18 +405,42 @@ $headerHeight = 140; // גובה ממוצע בפיקסלים
         <div class="doggy-header-user-info">
             <!-- שורת עם שם פרטי, כלב פעיל והתנתקות -->
             <div class="doggy-header-user-controls">
+                <!-- הודעת ברוכים הבאים -->
                 <div class="doggy-header-welcome">
                     <span class="doggy-header-welcome-icon">👋</span>
                     <span>שלום, <?= $first_name ?></span>
                 </div>
                 
+                <!-- מידע על הכלב הפעיל -->
                 <?php if ($user_type == 0 && isset($active_dog_name)): ?>
                 <div class="doggy-header-active-dog">
-                    <span class="doggy-header-dog-icon">🦮</span>
-                    <span>כלב פעיל: <?= $active_dog_name ?></span>
+                    <!-- בדיקה אם קיימת תמונה עבור הכלב הפעיל -->
+                    <!-- הצגת תמונת הכלב אם קיימת, אחרת אייקון -->
+                    <?php if (!empty($active_dog_image) && file_exists($active_dog_image)): ?>
+                        <!-- הצגת תמונת הכלב האמיתית -->
+                        <img src="<?= htmlspecialchars($active_dog_image) ?>" 
+                             alt="תמונת <?= $active_dog_name ?>" 
+                             class="doggy-header-dog-image"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                        <!-- כדי להסתיר את התמונה אם היא נכשלה בטעינה ולהציג במקום זאת את האלמנט הבא אחריה -->
+
+                        <!-- אייקון גיבוי שיוצג רק אם התמונה לא נטענת (onerror JavaScript) -->
+                        <span class="doggy-header-dog-icon" style="display: none;">🦮</span>
+
+
+                    <?php else: ?>
+                        <!-- אם אין תמונה או שהקובץ לא קיים - הצגת אייקון ברירת מחדל -->
+                        <span class="doggy-header-dog-icon">🦮</span>
+                    <?php endif; ?>
+                    
+                    <!-- מיכל לטקסט עם שם הכלב הפעיל -->
+                    <div class="doggy-header-dog-text">
+                        <span>שם הכלב הפעיל: <?= $active_dog_name ?></span>
+                    </div>
                 </div>
                 <?php endif; ?>
                 
+                <!-- כפתור התנתקות -->
                 <a href="../../registration/logout.php" class="doggy-header-logout">
                     <span>התנתקות</span>
                     <span class="doggy-header-logout-icon">🚪</span>
@@ -368,6 +450,8 @@ $headerHeight = 140; // גובה ממוצע בפיקסלים
     </div>
     
     <!-- סרגל ניווט -->
+    <!-- מכיל את כל הקישורים הראשיים של המערכת -->
+     <!-- הקישורים משתנים לפי סוג המשתמש (מנהל/משתמש רגיל) -->
     <nav class="doggy-header-nav">
         <div class="doggy-header-links">
             <?php foreach ($links as $href => $label): ?>
@@ -378,14 +462,22 @@ $headerHeight = 140; // גובה ממוצע בפיקסלים
 </div>
 
 <!-- סקריפט להתאמת גובה הכותרת בזמן אמת -->
+
+<!--  מחשב את הגובה האמיתי של הכותרת ומתאים את הריווח של גוף הדף -->
+<!-- מופעל בטעינת הדף ובכל שינוי גודל חלון  -->
 <script class="js-header-height-script">
+
+    /*
+     - פונקציה להתאמת הריווח העליון של הגוף לפי גובה הכותרת
+     - מחשבת את הגובה האמיתי ומתאימה בהתאם
+     */
 document.addEventListener('DOMContentLoaded', function() {
     function adjustPadding() {
         const headerHeight = document.querySelector('.doggy-header-container').offsetHeight;
         document.body.style.paddingTop = headerHeight + 'px';
     }
     
-    // התאמה ראשונית
+    // התאמה ראשונית בטעינת הדף
     adjustPadding();
     
     // התאמה בכל פעם שחלון הדפדפן משתנה
