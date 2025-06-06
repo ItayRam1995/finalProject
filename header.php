@@ -6,6 +6,9 @@ if (!isset($_SESSION['username'])) {
     exit;
 }
 
+// שינוי אזור הזמן לישראל
+date_default_timezone_set('Asia/Jerusalem');
+
 // הגדרת משתני המשתמש
 $first_name = htmlspecialchars($_SESSION['first_name'] ?? "אורח");
 $user_type = $_SESSION['user_type'] ?? 0;
