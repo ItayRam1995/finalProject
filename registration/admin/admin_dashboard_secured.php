@@ -1,6 +1,9 @@
 <?php include '../../header.php'; ?>
 <?php
 
+// שינוי אזור הזמן לישראל
+date_default_timezone_set('Asia/Jerusalem');
+
 // חיבור למסד נתונים
 $servername = "localhost";
 $username = "itayrm_ItayRam";
@@ -57,10 +60,12 @@ try {
         LEFT JOIN dogs d ON g.dog_id = d.dog_id 
         LEFT JOIN users u ON g.user_code = u.user_code 
         INNER JOIN reservation r ON g.connected_reservation_id = r.id
-        WHERE g.day >= CURDATE() 
-        AND g.day <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)
-        AND g.isTaken = 1 
-        AND r.status != 'deleted'
+        WHERE (
+              g.day > CURDATE() AND g.day <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+              OR (g.day = CURDATE() AND g.time > CURTIME())
+          )
+          AND r.status != 'deleted'
+          AND g.isTaken = 1
         ORDER BY g.day ASC, STR_TO_DATE(g.time, '%H:%i') ASC
     ");
 
@@ -120,8 +125,12 @@ try {
         SELECT g.grooming_type, COUNT(*) as count
         FROM grooming_appointments g 
         INNER JOIN reservation r ON g.connected_reservation_id = r.id
-        WHERE g.day >= CURDATE() AND g.isTaken = 1 AND r.status != 'deleted'
-        AND g.day <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)  
+        WHERE (
+            g.day > CURDATE() AND g.day <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+            OR (g.day = CURDATE() AND g.time > CURTIME())
+            )
+        AND g.isTaken = 1 
+        AND r.status != 'deleted'
         GROUP BY g.grooming_type
         ORDER BY count DESC
     ");
@@ -412,7 +421,7 @@ try {
         <!-- כותרת ראשית -->
         <div class="header">
             <h1><i class="fas fa-paw"></i> דשבורד מנהל הפנסיון</h1>
-            <p>מידע מעודכן על פעילות הפנסיון - <?php echo date('d/m/Y H:i'); ?></p>
+            <p>מידע מעודכן על פעילות הפנסיון - <?php echo date('d/m/Y H:i', strtotime('+10 minutes')); ?></p>
         </div>
 
         <!-- בודק אם הודעת שגיאה בהתחברות למסד נתונים -->

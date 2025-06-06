@@ -1,4 +1,50 @@
-<?php include '../../header.php'; ?>
+<?php 
+include '../../header.php'; 
+
+// הגדרות חיבור למסד נתונים
+$servername = "localhost";
+$username = "itayrm_ItayRam";
+$password = "itay0547862155";
+$dbname = "itayrm_dogs_boarding_house";
+
+// התחברות למסד נתונים
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("שגיאה בחיבור למסד הנתונים: " . $conn->connect_error);
+}
+
+// שליפת המחירים מהטבלה בשרת
+$sql = "SELECT grooming_type, grooming_price FROM grooming_prices ORDER BY id";
+$result = $conn->query($sql);
+
+// יצירת מילון מחירים לפי סוג הטיפוח כל סוג טיפוח הוא מפתח חדש במילון
+$prices = array();
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        $prices[$row['grooming_type']] = $row['grooming_price'];
+    }
+}
+
+$conn->close();
+
+// הגדרת מחירי ברירת מחדל במקרה של שגיאה
+$defaultPrices = array(
+    'רחצה וסירוק' => 80,
+    'תספורת מקצועית' => 120,
+    'גזיזת ציפורניים' => 40,
+    'ניקוי אוזניים' => 30,
+    'צחצוח שיניים' => 35,
+    'טיפול בקרציות' => 60
+);
+
+// שימוש במחירים מהמסד נתונים או ברירת מחדל
+$bathPrice = isset($prices['רחצה וסירוק']) ? $prices['רחצה וסירוק'] : $defaultPrices['רחצה וסירוק'];
+$cutPrice = isset($prices['תספורת מקצועית']) ? $prices['תספורת מקצועית'] : $defaultPrices['תספורת מקצועית'];
+$nailsPrice = isset($prices['גזיזת ציפורניים']) ? $prices['גזיזת ציפורניים'] : $defaultPrices['גזיזת ציפורניים'];
+$earPrice = isset($prices['ניקוי אוזניים']) ? $prices['ניקוי אוזניים'] : $defaultPrices['ניקוי אוזניים'];
+$teethPrice = isset($prices['צחצוח שיניים']) ? $prices['צחצוח שיניים'] : $defaultPrices['צחצוח שיניים'];
+$tickPrice = isset($prices['טיפול בקרציות']) ? $prices['טיפול בקרציות'] : $defaultPrices['טיפול בקרציות'];
+?>
 <!DOCTYPE html>
 <html lang="he">
 <head>
@@ -287,7 +333,7 @@
             <div class="treatment-info">
                 <div class="treatment-text">
                     <h3>רחצה וסירוק</h3>
-                    <p>₪80</p>
+                    <p>₪<?php echo $bathPrice; ?></p>
                 </div>
                 <div class="arrow">▼</div>
             </div>
@@ -296,7 +342,7 @@
                 <br/><br/>
                 <!--  toggleCard() בשביל שלא כל לחיצה על "הזמן עכשיו" גם תפתח/תסגור את הכרטיס באמצעות -->
                 <!-- מפעיל את הפונקציה ששולחת את הנתונים לשרת -->
-                <button class="order-button" onclick="event.stopPropagation(); orderGroomingService('רחצה וסירוק', 80)">הזמן עכשיו</button>
+                <button class="order-button" onclick="event.stopPropagation(); orderGroomingService('רחצה וסירוק', <?php echo $bathPrice; ?>)">הזמן עכשיו</button>
             </div>
         </div>
         
@@ -305,14 +351,14 @@
             <div class="treatment-info">
                 <div class="treatment-text">
                     <h3>תספורת מקצועית</h3>
-                    <p>₪120</p>
+                    <p>₪<?php echo $cutPrice; ?></p>
                 </div>
                 <div class="arrow">▼</div>
             </div>
             <div class="treatment-description">
                 תספורת לפי סטנדרט גזע או בקשה אישית, עם ציוד מתקדם והתאמה אישית לגודל וסוג הפרווה.
                 <br/><br/>
-                <button class="order-button" onclick="event.stopPropagation(); orderGroomingService('תספורת מקצועית', 120)">הזמן עכשיו</button>
+                <button class="order-button" onclick="event.stopPropagation(); orderGroomingService('תספורת מקצועית', <?php echo $cutPrice; ?>)">הזמן עכשיו</button>
             </div>
         </div>
         
@@ -321,14 +367,14 @@
             <div class="treatment-info">
                 <div class="treatment-text">
                     <h3>גזיזת ציפורניים</h3>
-                    <p>₪40</p>
+                    <p>₪<?php echo $nailsPrice; ?></p>
                 </div>
                 <div class="arrow">▼</div>
             </div>
             <div class="treatment-description">
                 גזיזת ציפורניים עדינה ובטוחה עם ציוד מקצועי, לשמירה על נוחות ובריאות כפות הרגליים.
                 <br/><br/>
-                <button class="order-button" onclick="event.stopPropagation(); orderGroomingService('גזיזת ציפורניים', 40)">הזמן עכשיו</button>
+                <button class="order-button" onclick="event.stopPropagation(); orderGroomingService('גזיזת ציפורניים', <?php echo $nailsPrice; ?>)">הזמן עכשיו</button>
             </div>
         </div>
         
@@ -339,14 +385,14 @@
             <div class="treatment-info">
                 <div class="treatment-text">
                     <h3>ניקוי אוזניים</h3>
-                    <p>₪30</p>
+                    <p>₪<?php echo $earPrice; ?></p>
                 </div>
                 <div class="arrow">▼</div>
             </div>
             <div class="treatment-description">
                 ניקוי יסודי ועדין של תעלות האוזניים למניעת דלקות וריחות לא נעימים.
                 <br/><br/>
-                <button class="order-button" onclick="event.stopPropagation(); orderGroomingService('ניקוי אוזניים', 30)">הזמן עכשיו</button>
+                <button class="order-button" onclick="event.stopPropagation(); orderGroomingService('ניקוי אוזניים', <?php echo $earPrice; ?>)">הזמן עכשיו</button>
             </div>
         </div>
         
@@ -355,14 +401,14 @@
             <div class="treatment-info">
                 <div class="treatment-text">
                     <h3>צחצוח שיניים</h3>
-                    <p>₪35</p>
+                    <p>₪<?php echo $teethPrice; ?></p>
                 </div>
                 <div class="arrow">▼</div>
             </div>
             <div class="treatment-description">
                 טיפול שיניים הכולל הסרת רובד, חיזוק חניכיים וריח פה רענן.
                 <br/><br/>
-                <button class="order-button" onclick="event.stopPropagation(); orderGroomingService('צחצוח שיניים', 35)">הזמן עכשיו</button>
+                <button class="order-button" onclick="event.stopPropagation(); orderGroomingService('צחצוח שיניים', <?php echo $teethPrice; ?>)">הזמן עכשיו</button>
             </div>
         </div>
         
@@ -371,14 +417,14 @@
             <div class="treatment-info">
                 <div class="treatment-text">
                     <h3>טיפול בקרציות</h3>
-                    <p>₪60</p>
+                    <p>₪<?php echo $tickPrice; ?></p>
                 </div>
                 <div class="arrow">▼</div>
             </div>
             <div class="treatment-description">
                 טיפול מונע או משמיד נגד טפילים חיצוניים באמצעות תכשירים בטוחים לכלבים.
                 <br/><br/>
-                <button class="order-button" onclick="event.stopPropagation(); orderGroomingService('טיפול בקרציות', 60)">הזמן עכשיו</button>
+                <button class="order-button" onclick="event.stopPropagation(); orderGroomingService('טיפול בקרציות', <?php echo $tickPrice; ?>)">הזמן עכשיו</button>
             </div>
         </div>
     </div>

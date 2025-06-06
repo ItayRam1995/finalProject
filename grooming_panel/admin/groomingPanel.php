@@ -1254,7 +1254,7 @@
       }
     }
     
-    // פונקציה להצגת ההזמנות בטבלה באופן דינמי לאחר סינון או טעינה
+      // פונקציה להצגת ההזמנות בטבלה באופן דינמי לאחר סינון או טעינה
     function renderAppointments(data) {
       // מוצא את גוף הטבלה שבו יוצגו ההזמנות
       const tbody = document.getElementById('appointments-table');
@@ -1274,7 +1274,7 @@
         `;
         return;
       }
-
+    
       
       // עובר על כל ההזמנות ויוצר שורה בטבלה עבור כל הזמנה
       // row = אובייקט של הזמנה אחת מתוך המערך
@@ -1284,7 +1284,7 @@
         const appDate = parseDate(row.day);
         // התאריך והשעה הנוכחיים של הדפדפן
         const today = new Date();
-         // מאפס את השעה של אותו תאריך לתחילת היום
+        // מאפס את השעה של אותו תאריך לתחילת היום
         today.setHours(0, 0, 0, 0);
         // משווה את תאריך ההזמנה מול התאריך של היום 
         const isToday = appDate.getTime() === today.getTime();
@@ -1318,6 +1318,47 @@
         } else {
           dateDisplay = `<div class="date-cell"><span>${formattedDate}</span></div>`;
         }
+        
+        // בניית תוכן עמודת הפעולות בהתאם לסטטוס ההזמנה
+        let actionsContent = '';
+        
+        // הצגת כפתור ביטול רק אם ההזמנה פעילה
+        if (row.status === 'active') {
+          actionsContent = `
+            <button class="btn btn-danger" onclick="cancelAppointment('${row.confirmation}', this)">
+              <i class="fas fa-times"></i>
+              ביטול
+            </button>
+          `;
+        } else {
+          // אם ההזמנה כבר בוטלה, הצג טקסט או תגית במקום הכפתור
+          actionsContent = `
+            <span class="status-cancelled" style="font-size: 0.8rem;">
+              <i class="fas fa-ban"></i>
+              בוטלה
+            </span>
+          `;
+        }
+        
+        // הוספת כפתור המידע (תמיד מוצג)
+        actionsContent += `
+          <div class="tooltip">
+            <button class="btn btn-info">
+              <i class="fas fa-info-circle"></i>
+            </button>
+            <span class="tooltip-text">
+              פרטי הזמנה ${row.confirmation}<br>
+              בעלים: ${row.first_name || ''} ${row.last_name || ''}<br>
+              טלפון: ${row.phone || '-'}<br>
+              כלב: ${row.dog_name || '-'}<br>
+              תאריך: ${formattedDate}<br>
+              שעה: ${row.time}<br>
+              סטטוס הזמנה: ${row.status || '-'}<br>
+              סטטוס תשלום: ${row.payment_status || '-'}<br>
+              הזמנת שהייה מקושרת: ${row.connected_reservation_id ? '#' + row.connected_reservation_id : '-'}
+            </span>
+          </div>
+        `;
         
         // יצירת שורת הזמנה בטבלה
         /*
@@ -1357,26 +1398,7 @@
           <td>${row.connected_reservation_id ? '#' + row.connected_reservation_id : '-'}</td>
           <td>${row.created_at}</td>
           <td class="actions">
-            <button class="btn btn-danger" onclick="cancelAppointment('${row.confirmation}', this)">
-              <i class="fas fa-times"></i>
-              ביטול
-            </button>
-            <div class="tooltip">
-              <button class="btn btn-info">
-                <i class="fas fa-info-circle"></i>
-              </button>
-              <span class="tooltip-text">
-                פרטי הזמנה ${row.confirmation}<br>
-                בעלים: ${row.first_name || ''} ${row.last_name || ''}<br>
-                טלפון: ${row.phone || '-'}<br>
-                כלב: ${row.dog_name || '-'}<br>
-                תאריך: ${formattedDate}<br>
-                שעה: ${row.time}<br>
-                סטטוס הזמנה: ${row.status || '-'}<br>
-                סטטוס תשלום: ${row.payment_status || '-'}<br>
-                הזמנת שהייה מקושרת: ${row.connected_reservation_id ? '#' + row.connected_reservation_id : '-'}
-              </span>
-            </div>
+            ${actionsContent}
           </td>
         `;
         
