@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> ביג'י פנסיון  - בית חם לחבר הטוב ביותר שלך</title>
+    <style>
+
+        /* איפוס ברירת מחדל של הדפדפן */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* עיצוב כללי לגוף הדף */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;    /* מרווח בין שורות */
+            color: #333; /* צבע טקסט כהה */
+        }
+        /* עיצוב הכותרת העליונה  */
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0; /* ריווח פנימי */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* תפריט ניווט - flexbox למיקום אלמנטים */
+        nav {
+            display: flex;
+            justify-content: space-between; /* מרווח שווה בין האלמנטים */
+            align-items: center; /* יישור לאמצע */
+            max-width: 1200px; /* רוחב מקסימלי */
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* רשימת קישורי הניווט */
+        .nav-menu {
+            display: flex;
+            list-style: none; /* שלא תוצג נקודה לפני כל קישור*/
+            gap: 2rem; /* רווח בין הקישורים */
+            align-items: center;
+        }
+
+        /* עיצוב קישורי הניווט */
+        .nav-menu a {
+            font-size: auto;
+            color: white;
+            text-decoration: none; /* הסרת קו תחתון */
+            transition: opacity 0.3s;
+        }
+
+        /* אפקט ריחוף על קישורי תפריט */
+        .nav-menu a:hover {
+            opacity: 0.8; /* שקיפות חלקית */
+        }
+
+        /* כפתור התחברות למערכת */
+        .login-btn {
+            background: white;
+            color: #667eea !important; /* דריסת צבע ברירת מחדל */
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px; /* פינות מעוגלות */
+            text-decoration: none;
+            font-weight: 600; /* טקסט מודגש */
+            transition: transform 0.3s, box-shadow 0.3s; /* זמן אנימציית מעבר */
+            display: inline-block; /* וודא שזה מוגדר */
+        }
+
+        /* אפקט ריחוף על כפתור ההתחברות */
+        .login-btn:hover {
+            transform: translateY(-2px); /* הרמה קלה */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* צל בולט יותר */
+        }
+
+        
+         /*  תמונת רקע גדולה עם כלב עם טקסט מרכזי */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('200.webp'); /* שכבה כהה על התמונה */
+            background-size: cover; /* התמונה מכסה את כל האזור */
+            background-position: center; /* מרכוז התמונה */
+            min-height: 900px; /* גובה מינימלי */
+            display: flex;
+            align-items: center; /* יישור אנכי למרכז */
+            justify-content: center; /* יישור אופקי למרכז */
+            text-align: center;
+            color: white;
+        }
+
+        /* תיבת התוכן בתוך האזור של תמונת הרקע עם הכלב */
+        .hero-content {
+            background-color: rgba(0, 0, 0, 0.5); /* רקע שחור שקוף */
+            max-width: 800px;
+            padding: 2rem;
+            border-radius: 20px; /* מעגל את הפינות */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); /* צל עמוק */
+            backdrop-filter: blur(4px); /* אפקט טשטוש עדין מאחורי התיבה  */
+        }
+
+        /* כותרת ראשית בתיבת התוכן בתוך האזור של תמונת הרקע עם הכלב */
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* צל טקסט */
+        }
+
+        /* כותרת משנית בתיבת התוכן בתוך האזור של תמונת הרקע עם הכלב */
+        .hero h2 {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* צל טקסט */
+        }
+
+        /* כפתור הרשמה למערכת */
+        .cta-button {
+            background: #ff6b6b; /* רקע אדום-כתום */
+            color: white;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer; /* סמן יד */
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255,107,107,0.3);
+        }
+
+        /* אפקט ריחוף */
+        .cta-button:hover {
+            background: #ff5252; /* צבע כהה יותר */
+            transform: translateY(-2px); /* הרמה קלה */
+            box-shadow: 0 6px 20px rgba(255,107,107,0.4); /* צל חזק יותר */
+        }
+
+        /* אזור השירותים */
+        .services {
+            padding: 4rem 2rem;
+            background: #f8f9fa; /* רקע אפור בהיר */
+        }
+
+        /* מיכל תוכן מרכזי */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto; /* מרכוז */
+        }
+
+        /* כותרת לכל סקשון */
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #333;
+        }
+
+        /* רשת כרטיסי שירותים */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem; /* רווח בין הכרטיסים */
+        }
+
+        /* כרטיס שירות בודד */
+        .service-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px; /* פינות מעוגלות */
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        /* אנימציית ריחוף לכרטיס שירות */
+        .service-card:hover {
+            transform: translateY(-5px); /* הרמה */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); /* צל חזק יותר */
+        }
+
+        /* אייקון אמוג'י בכרטיס */
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* כותרת כרטיס שירות */
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #667eea; /* צבע סגול */
+        }
+
+        /* אזור אודות */
+        .features {
+            padding: 4rem 2rem;
+            background: white;
+        }
+
+        /* רשת האזור של אודות */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        /* מאפיין בודד */
+        .feature {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        /* אייקון מאפיין - עיגול עם עיצוב */
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* סגול */
+            border-radius: 50%; /* עיגול מושלם */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem; /* מרכוז */
+            font-size: 2rem;
+            color: white;
+        }
+
+        /* אזור יצירת קשר */
+        .contact {
+            background: #f8f9fa;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        /* מידע יצירת קשר - flexbox */
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+            flex-wrap: wrap; /* גלישה לשורה חדשה במובייל */
+        }
+
+        /* פריט יצירת קשר בודד */
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* לוגו - תמונה וטקסט */
+        .logo {
+        display: flex;
+        flex-direction: column; /* סידור אנכי */
+        align-items: flex-start;
+        text-align: right;
+        }
+
+        /* שורת הלוגו - תמונה וכותרת */
+        .logo-title-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        }
+
+        /* תמונת הלוגו */
+        .logo-img-inline {
+        width: 150px;
+        height: auto; /* שמירה על יחס גובה-רוחב */
+        }
+
+        /* טקסט משני בלוגו */
+        .logo-subtext {
+        font-size: 1.3rem;
+        margin: 0;
+        }
+
+        /* כותרת תחתונה */
+        footer {
+            background: #333; /* רקע כהה */
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+
+       /* עיצוב רספונסיבי למסכים קטנים */
+        @media (max-width: 768px) {
+             /* תפריט אנכי במובייל */
+            .nav-menu {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            /* כותרות קטנות יותר במובייל */
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            /* ניווט אנכי במובייל */
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- כותרת עליונה עם תפריט ניווט -->
+    <header>
+        <nav>
+            <!-- אזור הלוגו -->
+            <div class="logo">
+            <div class="logo-title-row">
+                 <img src="shiro.png" alt="כלב אוכל" class="logo-img-inline">
+                <h1>ביג'י פנסיון לכלבים</h1>
+                 <p class="logo-subtext">- כי לכל כלב מגיע יומו בפנסיון</p>
+            </div>
+          
+            </div>
+            <!-- תפריט ניווט -->
+            <ul class="nav-menu">
+                <li><a href="#home"></a></li>
+                <li><a href="#services">שירותים</a></li>
+                <li><a href="#about">אודות</a></li>
+                <li><a href="#contact">צור קשר</a></li>
+                <li><a href="registration/login.html" class="login-btn">התחברות למערכת</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- אזור תמונת רקע גדולה עם כלב עם טקסט מרכזי  -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>בית חם וחופשה לחבר הטוב ביותר שלך</h1>
+            <h2>אנחנו מעניקים לכלב שלך חוויה מדהימה בזמן שאתם בחופשה. טיפול מסור, אהבה ומקצועיות</h2>
+            <a href="registration/register.html" class="cta-button">עדיין לא נרשמת? לחץ כאן!</a>
+        </div>
+    </section>
+
+    <!-- אזור השירותים - רשת כרטיסים -->
+    <section class="services" id="services">
+        <div class="container">
+            <h2 class="section-title">השירותים שלנו</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">🏠</div>
+                    <h3>אירוח פנסיוני מלא</h3>
+                    <p>חדרים ממוזגים ונוחים עם טיפול 24/7. הכלב שלך ירגיש כמו בבית</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🎾</div>
+                    <h3>פעילויות ומשחקים</h3>
+                    <p>שטחי משחק גדולים, פעילויות מגוונות וזמן איכות עם צוות מקצועי</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🍖</div>
+                    <h3>תזונה מותאמת אישית</h3>
+                    <p>ארוחות איכותיות לפי הצרכים האישיים של כל כלב</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🚿</div>
+                    <h3>טיפוח ורחצה</h3>
+                    <p>שירותי רחצה וטיפוח מקצועיים להחזרת כלב נקי ומטופח</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🏥</div>
+                    <h3>השגחה וטרינרית</h3>
+                    <p>וטרינר זמין במקרה הצורך לשקט נפשי מלא</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">📱</div>
+                    <h3>עדכונים יומיים</h3>
+                    <p>תמונות ועדכונים יומיים כדי שתהיו רגועים בחופשה</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- אזור אודות -->
+    <section class="features" id="about">
+        <div class="container">
+            <h2 class="section-title">למה לבחור בנו?</h2>
+            <div class="features-grid">
+                <div class="feature">
+                    <div class="feature-icon">✨</div>
+                    <h3>ניסיון של 15 שנה</h3>
+                    <p>צוות מקצועי ומנוסה שאוהב כלבים</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🐶</div>
+                    <h3>כלבים חברותיים</h3>
+                    <p>סביבה בטוחה ונוחה לכלב שלך</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">❤️</div>
+                    <h3>אהבה ומסירות</h3>
+                    <p>מתייחסים לכל כלב כמו לשלנו</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔒</div>
+                    <h3>ביטחון מקסימלי</h3>
+                    <p>גדרות גבוהות ואבטחה 24/7</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- אזור יצירת קשר -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <h2 class="section-title">צרו איתנו קשר</h2>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <span>📞</span>
+                    <span>03-12345678</span>
+                </div>
+                <div class="contact-item">
+                    <span>📧</span>
+                    <span>itayrm@mta.ac.il</span>
+                </div>
+                <div class="contact-item">
+                    <span>📍</span>
+                    <span>רחוב הכלבים 10, האקדמית תל-אביב יפו</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- כותרת תחתונה -->
+    <footer>
+        <p>&copy; 2025 ביג'י פנסיון לכלבים מאושרים. כל הזכויות שמורות.</p>
+    </footer>
+</body>
+</html>
