@@ -30,7 +30,7 @@ $nextMonthEnd = date('Y-m-t', strtotime('+1 month'));
 $activeReservationsCurrentMonth = $conn->query("
     SELECT COUNT(*) as count 
     FROM reservation 
-    WHERE status = 'active' 
+    WHERE status != 'deleted' 
     AND ((start_date BETWEEN '$currentMonthStart' AND '$currentMonthEnd') 
          OR (end_date BETWEEN '$currentMonthStart' AND '$currentMonthEnd') 
          OR (start_date <= '$currentMonthStart' AND end_date >= '$currentMonthEnd'))
@@ -41,7 +41,7 @@ $activeReservationsCurrentMonth = $conn->query("
 $activeReservationsNextMonth = $conn->query("
     SELECT COUNT(*) as count 
     FROM reservation 
-    WHERE status = 'active' 
+    WHERE status != 'deleted' 
     AND ((start_date BETWEEN '$nextMonthStart' AND '$nextMonthEnd') 
          OR (end_date BETWEEN '$nextMonthStart' AND '$nextMonthEnd') 
          OR (start_date <= '$nextMonthStart' AND end_date >= '$nextMonthEnd'))
@@ -64,7 +64,7 @@ $totalDaysCurrentMonth = $conn->query("
         END
     ) as total_days
     FROM reservation
-    WHERE status = 'active'
+    WHERE status != 'deleted'
     AND ((start_date BETWEEN '$currentMonthStart' AND '$currentMonthEnd') 
          OR (end_date BETWEEN '$currentMonthStart' AND '$currentMonthEnd') 
          OR (start_date <= '$currentMonthStart' AND end_date >= '$currentMonthEnd'))
@@ -87,7 +87,7 @@ $totalDaysNextMonth = $conn->query("
         END
     ) as total_days
     FROM reservation
-    WHERE status = 'active'
+    WHERE status != 'deleted'
     AND ((start_date BETWEEN '$nextMonthStart' AND '$nextMonthEnd') 
          OR (end_date BETWEEN '$nextMonthStart' AND '$nextMonthEnd') 
          OR (start_date <= '$nextMonthStart' AND end_date >= '$nextMonthEnd'))
