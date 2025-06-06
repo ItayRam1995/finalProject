@@ -16,6 +16,9 @@ $user_code = $_SESSION['user_code'];
 // JSON מגדיר שהתגובה תחזור בפורמט 
 header('Content-Type: application/json');
 
+// שינוי אזור הזמן לישראל
+date_default_timezone_set('Asia/Jerusalem');
+
 // פרטי התחברות למסד הנתונים
 $servername = "localhost";
 $username = "itayrm_ItayRam";
