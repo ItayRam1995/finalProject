@@ -84,7 +84,9 @@ $links = $user_type == 1
     ? [
         '../../registration/admin/admin_dashboard_secured.php' => 'דשבורד מנהל',
         '../../grooming_panel/admin/groomingPanel.php' => 'הזמנות טיפוח',
-        '../../inventory_management/admin/inventory_management.php' => 'ניהול מלאי'
+        '../../services/admin/updateServicePrice.php' => 'עדכון מחירי שירותים',
+        '../../registration/admin/clientOrders.php' => 'הזמנות הלינה',
+        '../../inventory_management/admin/inventory_management.php' => 'ניהול מלאי',
     ]
     : [
         '../../registration/user/user_dashboard_secured.php' => 'האזור האישי (פעולות נוספות)',
@@ -279,7 +281,7 @@ $headerHeight = 140; // גובה ממוצע בפיקסלים
     /* התאמה למובייל */
     @media (max-width: 768px) {
         body {
-            padding-top: 190px !important; /* הגדלת הריווח למסכים קטנים */
+            padding-top: 500px !important; /* הגדלת הריווח למסכים קטנים */
         }
         
         .doggy-header-top {
