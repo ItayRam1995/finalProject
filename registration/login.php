@@ -1,6 +1,9 @@
 <?php
 session_start();
 
+// הגדרת header להחזרת תשובת JSON
+header('Content-Type: application/json; charset=utf-8');
+
 // התחברות למסד הנתונים
 $servername = "localhost";
 $username = "itayrm_ItayRam";
@@ -12,13 +15,14 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 // מאפשר עבודה עם טקסטים בעברית
 $conn->set_charset("utf8");
 if ($conn->connect_error) {
-    echo json_encode(['error' => 'שגיאה בחיבור למסד הנתונים']);
+    echo json_encode(['success' => false, 'error' => 'שגיאה בחיבור למסד הנתונים']);
     exit;
 }
 
 // מוודא שכל השדות הנדרשים הגיעו מהטופס
 if (!isset($_POST['username'], $_POST['password'], $_POST['user_type'])) {
-    die("שגיאה: נתונים חסרים מהטופס.");
+    echo json_encode(['success' => false, 'error' => 'שגיאה: נתונים חסרים מהטופס']);
+    exit;
 }
 
 $username = $_POST['username'];
@@ -50,16 +54,19 @@ if ($result->num_rows > 0) {
         $_SESSION['user_code'] = $user['user_code'];
     } 
    
-    // אפ סוג המשתמש הוא מנהל - מפנה אותו לדשבורד המנהל
+    // קביעת הנתיב לפי סוג המשתמש
+    $redirect_url = '';
     if ($user['user_type'] == 1) {
-        header("Location: admin/admin_dashboard_secured.php");
-    // אפ סוג המשתמש הוא משתמש רגיל - מפנה אותו לדשבורד המשתמש
+        // אפ סוג המשתמש הוא מנהל - מפנה אותו לדשבורד המנהל
+        $redirect_url = 'admin/admin_dashboard_secured.php';
     } else {
-        header("Location: user/user_dashboard_secured.php");
+        // אפ סוג המשתמש הוא משתמש רגיל - מפנה אותו לאזור האישי של המשתמש
+        $redirect_url = 'user/user_dashboard_secured.php';
     }
-    exit;
+    
+    echo json_encode(['success' => true, 'redirect' => $redirect_url]);
 } else {
-    echo "שם משתמש או סיסמה שגויים";
+    echo json_encode(['success' => false, 'error' => 'שם משתמש או סיסמה שגויים']);
 }
 $conn->close();
 ?>

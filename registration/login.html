@@ -78,11 +78,27 @@
     button:active {
       transform: scale(0.97);
     }
+
+    /* עיצוב הודעת שגיאה */
+    .error-message {
+      background-color: #f8d7da;
+      color: #721c24;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #f5c6cb;
+      text-align: center;
+      display: none; /*מוסתרת כברירת מחדל*/
+    }
 </style>
 </head>
 <body>
-  <form action="login.php" method="post">
+  <form id="loginForm">
     <h2 style="text-align:center;">התחברות</h2>
+    
+    <!-- הודעת שגיאה -->
+    <div id="errorMessage" class="error-message"></div>
+    
     <input name="username" placeholder="שם משתמש" required />
     <div class="password-wrapper">
       <input id="password" name="password" type="password" placeholder="סיסמה" required />
@@ -121,6 +137,20 @@ function togglePassword() {
     icon.textContent = "🔒";
   }
 }
+
+// פונקציה להצגת הודעת שגיאה
+function showError(message) {
+  const errorDiv = document.getElementById('errorMessage');
+  errorDiv.textContent = message;
+  errorDiv.style.display = 'block';
+}
+
+// פונקציה להסתרת הודעת שגיאה
+function hideError() {
+  const errorDiv = document.getElementById('errorMessage');
+  errorDiv.style.display = 'none';
+}
+
 // הקוד ירוץ רק אחרי שכל התוכן של הדף נטען
 // הפעולות יתבצעו רק אחרי שכל האלמנטים נטענו – כדי לוודא ששדות הטופס קיימים בדף
 document.addEventListener("DOMContentLoaded", () => {
@@ -136,6 +166,51 @@ document.addEventListener("DOMContentLoaded", () => {
   // מחיקה אחרי המילוי - כדי למנוע מצב שהסיסמה תישאר בטעות בדפדפן
   sessionStorage.removeItem("username");
   sessionStorage.removeItem("password");
+
+  // בדיקה אם יש הודעת שגיאה מה- URL
+  // מכיל את כל הפרמטרים מהכתובת הנוכחית - כל מה שאחרי הסימן שאלה
+  const urlParams = new URLSearchParams(window.location.search);
+  //  שולפת את הערך של פרמטר השגיאה
+  const error = urlParams.get('error');
+
+  // אם הייתה שגיאה שהועברה ב - URL
+  if (error) {
+    // אם יש שגיאה, קוראים לפונקציה showError ומעבירים לה את הטקסט של השגיאה 
+    showError(decodeURIComponent(error));
+    // הסרת הפרמטר מה-URL כדי לא להציג את השגיאה שוב
+    // מסיר את הפרמטרים מה - URL כך שהשגיאה לא תוצג שוב ברענון הדף.
+    // replaceState מחליף את הכתובת בשורת הכתובת מבלי לטעון מחדש את הדף
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+
+  // טיפול בשליחת הטופס
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // מונע שליחה רגילה של הטופס
+    
+    hideError(); // מסתיר הודעות שגיאה קודמות
+    
+    // איסוף נתוני הטופס
+    const formData = new FormData(this);
+    
+    // שליחת הבקשה לשרת
+    fetch('login.php', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // הפניה לדף המתאים לפי סוג המשתמש
+        window.location.href = data.redirect;
+      } else {
+        // הצגת הודעת שגיאה
+        showError(data.error);
+      }
+    })
+    .catch(error => {
+      showError('שגיאה בתקשורת עם השרת');
+    });
+  });
 });
 </script>
 
