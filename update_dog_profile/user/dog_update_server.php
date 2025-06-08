@@ -36,7 +36,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 // האם זה שדה חובה
 function validateAndSanitize($data, $field_name, $type = 'string', $required = true) {
     // בדיקה אם השדה קיים ולא ריק במקרה שהוא חובה
-    if (!isset($data[$field_name]) || ($required && empty(trim($data[$field_name])))) {
+    // עבור שדות בוליאניים, '0' הוא ערך חוקי ולא אמור להיחשב כריק
+    if (!isset($data[$field_name])) {
+        return ['valid' => false, 'error' => "השדה '$field_name' הוא חובה"];
+    }
+    
+    // עבור שדות שאינם בוליאניים, בודקים אם הם ריקים
+    if ($required && $type !== 'boolean' && empty(trim($data[$field_name]))) {
         return ['valid' => false, 'error' => "השדה '$field_name' הוא חובה"];
     }
     
