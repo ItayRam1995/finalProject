@@ -176,11 +176,11 @@ if ($success && !headers_sent()) {
             <a href="create_events.php" class="btn">המשך ליצירת אירועים</a>
         </div>
     <?php else: ?>
-        <!-- הודעת שגיאה -->
+        <!-- הודעת שגיאה -->s
         <div class="error">
             <h2>❌ שגיאה בהרשאה</h2>
             <p><?php echo htmlspecialchars($error); ?></p>
-            <a href="index.html" class="btn">חזור לדף הבית</a>
+            <a href="calendar.php" class="btn">חזור לדף הקודם</a>
             <a href="authorize.php" class="btn">נסה שוב</a>
         </div>
     <?php endif; ?>
