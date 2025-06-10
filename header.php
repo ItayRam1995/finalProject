@@ -326,6 +326,13 @@ $headerHeight = 140; // גובה ממוצע בפיקסלים
         border-bottom-right-radius: 5px !important; /* עיגול רק בפינה הימנית התחתונה */
     }
     
+    /* תיבה לארגון הלוגו + הרמקול*/
+    .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+    
     /* התאמה למובייל */
     @media (max-width: 768px) {
 
@@ -394,12 +401,24 @@ $headerHeight = 140; // גובה ממוצע בפיקסלים
             <?= $user_type == 1 ? 'מנהל' : 'משתמש' ?>
         </div>
         
-        <!-- לוגו -->
-        <a href="<?= $user_type == 1 ? '../../registration/admin/admin_dashboard_secured.php' : '../../registration/user/user_dashboard_secured.php' ?>" class="doggy-header-logo">
-            <span>פנסיון כלבים</span>
-            <span class="doggy-header-logo-icon">🐕</span>
-          
-        </a>
+         <!-- לוגו -->
+         <div class="logo-section">
+            <a href="<?= $user_type == 1 ? '../../registration/admin/admin_dashboard_secured.php' : '../../registration/user/user_dashboard_secured.php' ?>" class="doggy-header-logo">
+                <span>פנסיון כלבים</span>
+                <span class="doggy-header-logo-icon">🐕</span>
+              
+            </a>
+            
+            <!--תיבת נגינה-->
+            <audio id="bgMusic" loop>
+              <source src="../../sounds/loading-music.mp3" type="audio/mpeg">
+              הדפדפן שלך אינו תומך בניגון מוזיקה.
+            </audio>
+            
+            <button id="musicToggleBtn" onclick="toggleMusic()" style="margin-right: 20px; background: none; border: none; cursor: pointer;font-size: 32px;">
+              🔊
+            </button>
+        </div>
         
         <!-- מידע משתמש וכפתור התנתקות -->
         <div class="doggy-header-user-info">
@@ -483,4 +502,26 @@ document.addEventListener('DOMContentLoaded', function() {
     // התאמה בכל פעם שחלון הדפדפן משתנה
     window.addEventListener('resize', adjustPadding);
 });
+
+  //  טיפול בתיבת הנגינה
+  let isPlaying = false;
+  const audio = document.getElementById('bgMusic');
+  const toggleBtn = document.getElementById('musicToggleBtn');
+
+  function toggleMusic() {
+    if (!audio) return;
+    
+    if (isPlaying) {
+      audio.pause();
+      toggleBtn.textContent = '🔇';
+    } else {
+      audio.play().catch(err => {
+        console.error("לא ניתן להפעיל מוזיקה אוטומטית:", err);
+      });
+      toggleBtn.textContent = '🔊';
+    }
+    isPlaying = !isPlaying;
+  }
+
+
 </script>
