@@ -66,6 +66,12 @@ if (isset($_SESSION['active_dog_id'])) {
     $dog_id = $_SESSION['active_dog_id'];
 }
 
+// קבלת שם הכלב הפעיל מה-SESSION
+$dog_name = null;
+if (isset($_SESSION['active_dog_name'])) {
+    $dog_name = $_SESSION['active_dog_name'];
+}
+
 // קבלת reservation_id מהנתונים שנשלחו (אם קיים)
 $connected_reservation_id = null;
 if (isset($data['reservation_id']) && !empty($data['reservation_id'])) {
@@ -73,9 +79,8 @@ if (isset($data['reservation_id']) && !empty($data['reservation_id'])) {
 }
 
 // הכנסת ההזמנה עם קישור להזמנת הפנסיון
-$stmt = $conn->prepare("INSERT INTO grooming_appointments (day, time, confirmation, isTaken, user_code, grooming_type, grooming_price, dog_id, connected_reservation_id) VALUES (?, ?, ?, 1, ?, ?, ?, ?, ?)");
-$stmt->bind_param("sssssiii", $data['day'], $data['time'], $confirmation, $user_code, $grooming_type, $grooming_price, $dog_id, $connected_reservation_id);
-
+$stmt = $conn->prepare("INSERT INTO grooming_appointments (day, time, confirmation, isTaken, user_code, grooming_type, grooming_price, dog_id, dog_name, connected_reservation_id) VALUES (?, ?, ?, 1, ?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("sssssiiss", $data['day'], $data['time'], $confirmation, $user_code, $grooming_type, $grooming_price, $dog_id, $dog_name, $connected_reservation_id);
 if ($stmt->execute()) {
     // שמירת נתוני ההזמנה בסשן לעמוד הסיכום (לא מוחקים את הנתונים המקוריים עדיין)
     $_SESSION['last_grooming_confirmation'] = $confirmation;
