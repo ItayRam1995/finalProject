@@ -814,7 +814,7 @@ try {
             $end_datetime = fixTimezone($event_datetime . ' +30 minutes'); // משך של 30 דקות
             
             // כותרת האירוע עם אמוג'י וסוג הטיפוח
-            $event_title = "🐕 טיפוח: " . $row['grooming_type'];
+            $event_title = "🐕 טיפוח: " . $row['grooming_type'] . " עבור: " . $row['dog_name'];
             
             // בדיקה אם אירוע דומה כבר קיים
             // הבדיקה:
@@ -857,7 +857,7 @@ try {
 
             $event_data = [
                 'summary' => $event_title, // כותרת האירוע
-                'description' => "📋 אישור: {$row['confirmation']}\n👤 שם משתמש: {$username}\n🐕 שם הכלב: {$dog_name}", // תיאור מפורט
+                'description' => "📋 אישור: {$row['confirmation']}\n👤 שם משתמש: {$username}\n🐕 שם הכלב: {$row['dog_name']}", // תיאור מפורט
                 // זמן התחלה
                 'start' => [
                     'dateTime' => $start_datetime, //  זמן מדויק בפורמט ISO 8601
@@ -920,7 +920,14 @@ try {
     flush();
     
     //  שליפת כל הזמנות הפנסיון הפעילות - עם מיון לפי תאריך התחלה
-    $stmt = $pdo->prepare("SELECT * FROM reservation WHERE user_code = ? AND status != 'deleted' ORDER BY start_date");
+    $stmt = $pdo->prepare("
+    SELECT r.*, d.dog_name 
+    FROM reservation r 
+    INNER JOIN dogs d ON r.dog_id = d.dog_id 
+    WHERE r.user_code = ? AND r.status != 'deleted' 
+    ORDER BY r.start_date
+    ");
+
     $stmt->execute([$user_code]);
     
     // עיבוד כל הזמנת פנסיון
@@ -953,7 +960,7 @@ try {
             $start_date = date('Y-m-d', strtotime($row['start_date']));
             $end_date = date('Y-m-d', strtotime($row['end_date'] . ' +1 day'));
             
-            $event_title = "🏠 שהייה בפנסיון";
+            $event_title = "🏠 שהייה בפנסיון עבור: {$row['dog_name']}";
             
             // בדיקה אם ההזמנה כבר קיימת
             //  - בודקים לפי תאריך ההתחלה
@@ -987,7 +994,7 @@ try {
               תיאור עם מספר ההזמנה:
                - מספר ההזמנה משמש אותנו בתהליך המחיקה
               */
-                'description' => "📋 הזמנת שהייה מספר: {$row['id']}\n👤 שם משתמש: {$username}\n🐕 שם הכלב: {$dog_name}",
+                'description' => "📋 הזמנת שהייה מספר: {$row['id']}\n👤 שם משתמש: {$username}\n🐕 שם הכלב: {$row['dog_name']}",
                 'start' => ['date' => $start_date], // אירוע יום שלם - רק תאריך
                 'end' => ['date' => $end_date] // פורמט: YYYY-MM-DD (ללא שעה)
             ];
