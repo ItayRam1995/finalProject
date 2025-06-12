@@ -175,6 +175,12 @@
           <span>עדכון פרטים אישיים</span>
         </a>
 
+        <!-- כפתור להוספת משוב על השירות -->
+        <a href="../../feedback/user/feedback_form.html" class="action-button">
+          <i class="fa-solid fa-clipboard-list" style="color: #FFD43B;"></i>
+          <span>הוסף משוב על השירות</span>
+        </a>
+
         <!-- כפתור התנתקות -->
         <a href="../logout.php" class="action-button logout-button">
           <i class="fas fa-sign-out-alt"></i>

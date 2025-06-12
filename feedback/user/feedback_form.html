@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סקר שביעות רצון מהשירות</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            direction: rtl;
+            background: linear-gradient(120deg, #e0f7fa, #0288d1);
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 70%;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            margin-top: 50px;
+        }
+        h2 {
+            text-align: center;
+            color: #01579b;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        h3 {
+            color: #0277bd;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+        p {
+            font-size: 1.2em;
+            line-height: 1.8;
+            color: #555;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            font-size: 1.2em;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .rating {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        .rating input {
+            margin-right: 5px;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            height: 100px;
+            font-size: 1em;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .btn {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: #0288d1;
+            color: white;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #0277bd;
+            transform: scale(1.05);
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>סקר שביעות רצון מהשירות</h2>
+        <h3>נשמח לשמוע את דעתך על השירות שקיבלת!</h3>
+        <p>אנא מלא\י את הסקר הבא על מנת לעזור לנו לשפר את השירות שלנו ולהתאים אותו לצרכים שלך ושל כלבך.</p>
+
+        <form action="process_survey.php" method="POST">
+            <div class="form-group">
+                <label>איך את\ה מדרג\ת את חוויית השירות הכללית? <span style="color: red;">*</span></label>
+                <div class="rating">
+                    <label><input type="radio" name="overallExperience" value="מצוין" required> מצוין</label>
+                    <label><input type="radio" name="overallExperience" value="טוב"> טוב</label>
+                    <label><input type="radio" name="overallExperience" value="ממוצע"> ממוצע</label>
+                    <label><input type="radio" name="overallExperience" value="גרוע"> גרוע</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>איך את\ה מדרג\ת את איכות הטיפולים והטיפוח?</label>
+                <div class="rating">
+                    <label><input type="radio" name="treatmentExperience" value="מצוין"> מצוין</label>
+                    <label><input type="radio" name="treatmentExperience" value="טוב"> טוב</label>
+                    <label><input type="radio" name="treatmentExperience" value="ממוצע"> ממוצע</label>
+                    <label><input type="radio" name="treatmentExperience" value="גרוע"> גרוע</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>איך את\ה מדרג\ת את חוויית השהייה בפנסיון?</label>
+                <div class="rating">
+                    <label><input type="radio" name="stayExperience" value="מצוין"> מצוין</label>
+                    <label><input type="radio" name="stayExperience" value="טוב"> טוב</label>
+                    <label><input type="radio" name="stayExperience" value="ממוצע"> ממוצע</label>
+                    <label><input type="radio" name="stayExperience" value="גרוע"> גרוע</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>איך את\ה מדרג\ת את יחס הצוות?</label>
+                <div class="rating">
+                    <label><input type="radio" name="staffExperience" value="מצוין"> מצוין</label>
+                    <label><input type="radio" name="staffExperience" value="טוב"> טוב</label>
+                    <label><input type="radio" name="staffExperience" value="ממוצע"> ממוצע</label>
+                    <label><input type="radio" name="staffExperience" value="גרוע"> גרוע</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>האם יש לך משוב נוסף או הצעות לשיפור?</label>
+                <textarea name="additionalFeedback" placeholder="הכנס את המשוב שלך כאן"></textarea>
+            </div>
+
+            <div class="button-container">
+                <button type="submit" class="btn">שלח\י את הסקר</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="footer">
+        <p>תודה שבחרתם בפנסיון הכלבים שלנו! נשמח להעניק לחברכם על ארבע את הטיפול המיטבי.</p>
+    </div>
+</body>
+</html>
