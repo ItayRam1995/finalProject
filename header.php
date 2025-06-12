@@ -92,6 +92,7 @@ $links = $user_type == 1
         '../../services/admin/updateServicePrice.php' => 'עדכון מחירי שירותים',
         '../../registration/admin/clientOrders.php' => 'הזמנות הלינה',
         '../../inventory_management/admin/inventory_management.php' => 'ניהול מלאי',
+         '../../feedback/admin/feedback_summary.php' => 'סיכום משובים',
     ]
     : [
         '../../registration/user/user_dashboard_secured.php' => 'האזור האישי (פעולות נוספות)',
